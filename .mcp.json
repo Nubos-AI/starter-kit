@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "nubos": {
+      "command": "npx",
+      "args": [
+        "-y", "mcp-remote",
+        "http://localhost/mcp/nubos",
+        "--header", "Authorization: Bearer wcuRZ9BwuMGRfaR1eGU4LGiHh4f6U9vRvmcA2HgesYPJ2YpDhxLhzizE7B91BLESt2rUQAwvtM79iTVUJj01YSKIXMCD4i3zfCzBZ3XriRtwZ5lqKjgX1euGAG75"
+      ]
+    }
+  }
+}
+

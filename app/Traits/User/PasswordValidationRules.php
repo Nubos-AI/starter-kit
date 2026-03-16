@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Concerns;
+namespace App\Traits\User;
 
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -10,9 +10,7 @@ use Illuminate\Validation\Rules\Password;
 trait PasswordValidationRules
 {
     /**
-     * Get the validation rules used to validate passwords.
-     *
-     * @return array<int, Rule|array<mixed>|string>
+     * @return array<int, Rule|array|string>
      */
     protected function passwordRules(): array
     {
@@ -20,9 +18,7 @@ trait PasswordValidationRules
     }
 
     /**
-     * Get the validation rules used to validate the current password.
-     *
-     * @return array<int, Rule|array<mixed>|string>
+     * @return array<int, Rule|array|string>
      */
     protected function currentPasswordRules(): array
     {

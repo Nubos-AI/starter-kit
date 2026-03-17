@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
+import { nubosModules } from './resources/js/plugins/nubos-modules';
 
 export default defineConfig({
     plugins: [
@@ -23,5 +24,6 @@ export default defineConfig({
         wayfinder({
             formVariants: true,
         }),
+        nubosModules(),
     ],
 });

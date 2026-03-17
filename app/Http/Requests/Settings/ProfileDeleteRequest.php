@@ -13,7 +13,7 @@ class ProfileDeleteRequest extends FormRequest
     use PasswordValidationRules;
 
     /**
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, ValidationRule|array<int, mixed>|string>
      */
     public function rules(): array
     {

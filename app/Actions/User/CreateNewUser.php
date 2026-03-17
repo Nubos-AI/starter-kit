@@ -15,6 +15,7 @@ class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
+    /** @param array<string, mixed> $input */
     public function execute(array $input): User
     {
         $validated = Validator::make($input, [

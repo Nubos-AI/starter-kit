@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 
 class UpdateUser
 {
+    /** @param array<string, mixed> $input */
     public function execute(User $user, array $input): void
     {
         $validated = Validator::make($input, [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Salutation;
 use Database\Factories\UserFactory;
@@ -17,6 +18,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory;
     use Notifiable;
+    use BelongsToTenant;
     use TwoFactorAuthenticatable;
 
     /**

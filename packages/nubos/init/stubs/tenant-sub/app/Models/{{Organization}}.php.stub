@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Policies\{{Organization}}Policy;
+use App\Traits\TenantScope;
+use Database\Factories\{{Organization}}Factory;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+#[UsePolicy({{Organization}}Policy::class)]
+class {{Organization}} extends Model
+{
+    /** @use HasFactory<{{Organization}}Factory> */
+    use HasFactory;
+    use HasUuids;
+    use SoftDeletes;
+    use TenantScope;
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+    /** @var list<string> */
+    protected $fillable = [
+        'tenant_id',
+        'name',
+        'slug',
+    ];
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, '{{organization}}_user')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+}

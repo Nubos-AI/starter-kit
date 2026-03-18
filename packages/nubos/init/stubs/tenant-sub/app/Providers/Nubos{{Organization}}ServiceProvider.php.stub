@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
+
+use App\Http\Middleware\SetCurrent{{Organization}};
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+
+class Nubos{{Organization}}ServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        /** @var Router $router */
+        $router = $this->app->make(Router::class);
+        $router->aliasMiddleware('set-current-{{organization}}', SetCurrent{{Organization}}::class);
+
+        Route::prefix('{{organizations}}/{{{organization}}}')
+            ->middleware(['web', 'auth', 'verified', 'set-current-{{organization}}'])
+            ->group(base_path('routes/app.php'));
+
+        Route::middleware(['web', 'auth', 'verified'])
+            ->group(base_path('routes/{{organization}}.php'));
+    }
+}

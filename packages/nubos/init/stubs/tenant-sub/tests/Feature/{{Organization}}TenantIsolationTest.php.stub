@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Models\{{Organization}};
+use App\Models\Tenant;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function (): void {
+    $this->tenantA = Tenant::factory()->create(['slug' => 'alpha']);
+    $this->tenantB = Tenant::factory()->create(['slug' => 'bravo']);
+});
+
+it('scopes {{organization}} queries to the current tenant', function (): void {
+    app()->instance('currentTenant', $this->tenantA);
+    {{Organization}}::query()->create([
+        'tenant_id' => $this->tenantA->id,
+        'name' => 'Alpha {{Organization}}',
+        'slug' => 'alpha-{{organization}}',
+    ]);
+
+    app()->instance('currentTenant', $this->tenantB);
+    {{Organization}}::query()->create([
+        'tenant_id' => $this->tenantB->id,
+        'name' => 'Bravo {{Organization}}',
+        'slug' => 'bravo-{{organization}}',
+    ]);
+
+    app()->instance('currentTenant', $this->tenantA);
+    $results = {{Organization}}::query()->get();
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first()->name)->toBe('Alpha {{Organization}}');
+});
+
+it('auto-sets tenant_id when creating a {{organization}}', function (): void {
+    app()->instance('currentTenant', $this->tenantA);
+
+    ${{organization}} = {{Organization}}::query()->create([
+        'name' => 'Auto-Scoped',
+        'slug' => 'auto-scoped',
+    ]);
+
+    expect(${{organization}}->tenant_id)->toBe($this->tenantA->id);
+});
+
+it('returns all {{organizations}} when no tenant is bound', function (): void {
+    {{Organization}}::withoutGlobalScope('tenant')->create([
+        'tenant_id' => $this->tenantA->id,
+        'name' => 'Alpha {{Organization}}',
+        'slug' => 'alpha-{{organization}}',
+    ]);
+
+    {{Organization}}::withoutGlobalScope('tenant')->create([
+        'tenant_id' => $this->tenantB->id,
+        'name' => 'Bravo {{Organization}}',
+        'slug' => 'bravo-{{organization}}',
+    ]);
+
+    expect(app()->bound('currentTenant'))->toBeFalse();
+    expect({{Organization}}::withoutGlobalScope('tenant')->count())->toBe(2);
+});

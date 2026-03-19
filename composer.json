@@ -1,5 +1,4 @@
 {
-    "$schema": "https://getcomposer.org/schema.json",
     "name": "nubos-ai/starter-kit",
     "type": "project",
     "description": "The ideal starting point for enterprise/B2B/B2C SaaS applications",

@@ -1,0 +1,56 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Models\{{Organization}};
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+it('allows a user to join the {{organization}}', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $user = User::factory()->create();
+
+    ${{organization}}->members()->attach($user->id, ['role' => 'member']);
+
+    expect(${{organization}}->members()->where('user_id', $user->id)->exists())->toBeTrue();
+});
+
+it('allows a user to leave the {{organization}}', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $user = User::factory()->create();
+
+    ${{organization}}->members()->attach($user->id, ['role' => 'member']);
+    ${{organization}}->members()->detach($user->id);
+
+    expect(${{organization}}->members()->where('user_id', $user->id)->exists())->toBeFalse();
+});
+
+it('returns true for belongsTo{{Organization}} when user is a member', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $owner = User::query()->find(${{organization}}->owner_id);
+
+    expect($owner->belongsTo{{Organization}}(${{organization}}))->toBeTrue();
+});
+
+it('returns false for belongsTo{{Organization}} when user is not a member', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $stranger = User::factory()->create();
+
+    expect($stranger->belongsTo{{Organization}}(${{organization}}))->toBeFalse();
+});
+
+it('returns true for owns{{Organization}} when user is the owner', function (): void {
+    $owner = User::factory()->create();
+    ${{organization}} = {{Organization}}::factory()->create(['owner_id' => $owner->id]);
+
+    expect($owner->owns{{Organization}}(${{organization}}))->toBeTrue();
+});
+
+it('returns false for owns{{Organization}} when user is not the owner', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $other = User::factory()->create();
+
+    expect($other->owns{{Organization}}(${{organization}}))->toBeFalse();
+});

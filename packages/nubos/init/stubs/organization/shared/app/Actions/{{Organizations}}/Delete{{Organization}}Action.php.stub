@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions\{{Organizations}};
+
+use App\Events\{{Organizations}}\{{Organization}}Deleted;
+use App\Models\{{Organization}};
+
+class Delete{{Organization}}Action
+{
+    public function execute({{Organization}} ${{organization}}): void
+    {
+        ${{organization}}->delete();
+
+        {{Organization}}Deleted::dispatch(${{organization}});
+    }
+}

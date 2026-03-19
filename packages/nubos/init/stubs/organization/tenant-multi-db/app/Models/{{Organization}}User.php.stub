@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Traits\UsesTenantConnection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class {{Organization}}User extends Pivot
+{
+    use HasUuids;
+    use SoftDeletes;
+    use UsesTenantConnection;
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $table = '{{organization}}_user';
+
+    /** @var list<string> */
+    protected $fillable = [
+        '{{organization}}_id',
+        'user_id',
+        'role',
+    ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [];
+    }
+}

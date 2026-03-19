@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\{{Organizations}}\Store{{Organization}}Request;
 use App\Http\Requests\{{Organizations}}\Update{{Organization}}Request;
 use App\Models\{{Organization}};
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,8 +26,11 @@ class {{Organization}}Controller extends Controller
     {
         $this->authorize('viewAny', {{Organization}}::class);
 
+        /** @var User $user */
+        $user = $request->user();
+
         return Inertia::render('{{Organizations}}/Index', [
-            '{{organizations}}' => $request->user()->{{organizations}},
+            '{{organizations}}' => $user->{{organizations}},
         ]);
     }
 
@@ -43,12 +47,15 @@ class {{Organization}}Controller extends Controller
     ): RedirectResponse {
         $this->authorize('create', {{Organization}}::class);
 
-        ${{organization}} = $action->execute($request->user(), $request->validated());
+        /** @var User $user */
+        $user = $request->user();
+
+        ${{organization}} = $action->execute($user, $request->validated());
 
         return redirect()->route('dashboard', ${{organization}});
     }
 
-    public function show({{Organization}} ${{organization}}): Response
+    public function settings({{Organization}} ${{organization}}): Response
     {
         $this->authorize('view', ${{organization}});
 

@@ -1,0 +1,69 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions\{{Organizations}};
+
+use App\Events\{{Organizations}}\MemberAdded;
+use App\Events\{{Organizations}}\{{Organization}}Created;
+use App\Models\{{Organization}};
+use App\Models\Tenant;
+use App\Models\User;
+use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class Create{{Organization}}Action
+{
+    private const MAX_SLUG_RETRIES = 3;
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function execute(User $user, array $data): {{Organization}}
+    {
+        abort_unless(app()->bound('currentTenant'), 500, 'Tenant context required.');
+
+        /** @var Tenant $tenant */
+        $tenant = app('currentTenant');
+
+        return $this->executeWithSlugRetry(function (string $slug) use ($user, $data, $tenant): {{Organization}} {
+            return DB::transaction(function () use ($user, $data, $slug, $tenant): {{Organization}} {
+                ${{organization}} = {{Organization}}::query()->create([
+                    'tenant_id' => $tenant->id,
+                    'name' => $data['name'],
+                    'slug' => $slug,
+                ]);
+
+                ${{organization}}->members()->attach($user, ['role' => 'owner']);
+
+                {{Organization}}Created::dispatch(${{organization}});
+                MemberAdded::dispatch(${{organization}}, $user, 'owner');
+
+                return ${{organization}};
+            });
+        }, $data['name']);
+    }
+
+    /**
+     * @param callable(string): {{Organization}} $callback
+     */
+    private function executeWithSlugRetry(callable $callback, string $name): {{Organization}}
+    {
+        $slug = Str::slug($name);
+
+        for ($attempt = 0; $attempt <= self::MAX_SLUG_RETRIES; $attempt++) {
+            $candidateSlug = $attempt === 0 ? $slug : "{$slug}-{$attempt}";
+
+            try {
+                return $callback($candidateSlug);
+            } catch (UniqueConstraintViolationException) {
+                if ($attempt === self::MAX_SLUG_RETRIES) {
+                    throw new \RuntimeException("Failed to generate unique slug for: {$name}");
+                }
+            }
+        }
+
+        throw new \RuntimeException("Failed to generate unique slug for: {$name}");
+    }
+}

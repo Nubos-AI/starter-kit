@@ -1,0 +1,49 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Database\Factories;
+
+use App\Models\{{Organization}};
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends Factory<{{Organization}}>
+ */
+class {{Organization}}Factory extends Factory
+{
+    protected $model = {{Organization}}::class;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        $name = fake()->unique()->company();
+
+        return [
+            'owner_id' => User::factory(),
+            'name' => $name,
+            'slug' => Str::slug($name),
+            'is_personal' => false,
+        ];
+    }
+
+    public function personal(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'is_personal' => true,
+        ]);
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function ({{Organization}} ${{organization}}): void {
+            if (!${{organization}}->members()->where('user_id', ${{organization}}->owner_id)->exists()) {
+                ${{organization}}->members()->attach(${{organization}}->owner_id, ['role' => 'owner']);
+            }
+        });
+    }
+}

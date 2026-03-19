@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions\{{Organizations}};
+
+use App\Events\{{Organizations}}\{{Organization}}Updated;
+use App\Models\{{Organization}};
+
+class Update{{Organization}}Action
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function execute({{Organization}} ${{organization}}, array $data): {{Organization}}
+    {
+        ${{organization}}->update($data);
+
+        ${{organization}} = ${{organization}}->refresh();
+
+        {{Organization}}Updated::dispatch(${{organization}});
+
+        return ${{organization}};
+    }
+}

@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Models\{{Organization}};
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
+
+uses(RefreshDatabase::class);
+
+it('creates the {{organization}} with correct owner and pivot entry', function (): void {
+    $owner = User::factory()->create();
+    ${{organization}} = {{Organization}}::factory()->create(['owner_id' => $owner->id]);
+
+    expect(${{organization}}->owner_id)->toBe($owner->id)
+        ->and(${{organization}}->members()->where('user_id', $owner->id)->exists())->toBeTrue();
+});
+
+it('updates the {{organization}} name', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create(['name' => 'Original']);
+
+    ${{organization}}->update(['name' => 'Updated']);
+
+    expect(${{organization}}->fresh()->name)->toBe('Updated');
+});
+
+it('soft deletes the {{organization}}', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+
+    ${{organization}}->delete();
+
+    expect(${{organization}}->trashed())->toBeTrue()
+        ->and({{Organization}}::query()->find(${{organization}}->id))->toBeNull()
+        ->and({{Organization}}::withTrashed()->find(${{organization}}->id))->not->toBeNull();
+});
+
+it('generates a unique slug', function (): void {
+    ${{organization}}A = {{Organization}}::factory()->create(['slug' => 'acme']);
+    ${{organization}}B = {{Organization}}::factory()->create(['slug' => 'acme-2']);
+
+    expect(${{organization}}A->slug)->toBe('acme')
+        ->and(${{organization}}B->slug)->toBe('acme-2')
+        ->and(${{organization}}A->slug)->not->toBe(${{organization}}B->slug);
+});
+
+it('uses uuid as primary key', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+
+    expect(Str::isUuid(${{organization}}->id))->toBeTrue();
+});

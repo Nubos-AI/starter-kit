@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create(
+            '{{organization}}_user',
+            function (Blueprint $table): void {
+                $table->uuid('id')->primary();
+                $table->foreignUuid('{{organization}}_id')
+                    ->index('idx_{{organization}}_user_{{organization}}_id')
+                    ->constrained()
+                    ->cascadeOnDelete();
+                $table->foreignUuid('user_id')
+                    ->index('idx_{{organization}}_user_user_id')
+                    ->constrained()
+                    ->cascadeOnDelete();
+                $table->string('role', 50)->default('member');
+                $table->timestamps();
+
+                $table->unique(['{{organization}}_id', 'user_id'], 'uniq_{{organization}}_user');
+            },
+        );
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('{{organization}}_user');
+    }
+};

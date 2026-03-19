@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Models\{{Organization}};
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+it('allows the owner to update the {{organization}}', function (): void {
+    $owner = User::factory()->create();
+    ${{organization}} = {{Organization}}::factory()->create(['owner_id' => $owner->id]);
+
+    expect($owner->can('update', ${{organization}}))->toBeTrue();
+});
+
+it('allows the owner to delete a non-personal {{organization}}', function (): void {
+    $owner = User::factory()->create();
+    ${{organization}} = {{Organization}}::factory()->create([
+        'owner_id' => $owner->id,
+        'is_personal' => false,
+    ]);
+
+    expect($owner->can('delete', ${{organization}}))->toBeTrue();
+});
+
+it('prevents deletion of a personal {{organization}}', function (): void {
+    $owner = User::factory()->create();
+    ${{organization}} = {{Organization}}::factory()->personal()->create(['owner_id' => $owner->id]);
+
+    expect($owner->can('delete', ${{organization}}))->toBeFalse();
+});
+
+it('allows a member to view the {{organization}}', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $member = User::factory()->create();
+    ${{organization}}->members()->attach($member->id, ['role' => 'member']);
+
+    expect($member->can('view', ${{organization}}))->toBeTrue();
+});
+
+it('prevents a member from updating the {{organization}}', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $member = User::factory()->create();
+    ${{organization}}->members()->attach($member->id, ['role' => 'member']);
+
+    expect($member->can('update', ${{organization}}))->toBeFalse();
+});
+
+it('prevents a member from deleting the {{organization}}', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $member = User::factory()->create();
+    ${{organization}}->members()->attach($member->id, ['role' => 'member']);
+
+    expect($member->can('delete', ${{organization}}))->toBeFalse();
+});
+
+it('prevents a non-member from viewing the {{organization}}', function (): void {
+    ${{organization}} = {{Organization}}::factory()->create();
+    $stranger = User::factory()->create();
+
+    expect($stranger->can('view', ${{organization}}))->toBeFalse();
+});
+
+it('allows any authenticated user to create the {{organization}}', function (): void {
+    $user = User::factory()->create();
+
+    expect($user->can('create', {{Organization}}::class))->toBeTrue();
+});

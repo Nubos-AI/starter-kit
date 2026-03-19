@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Observers;
+
+use App\Jobs\CleanupUser{{Organization}}MembershipsJob;
+use App\Models\User;
+
+class UserTenant{{Organization}}Observer
+{
+    public function deleting(User $user): void
+    {
+        CleanupUser{{Organization}}MembershipsJob::dispatch($user->id);
+    }
+}

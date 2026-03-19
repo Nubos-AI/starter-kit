@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenants\StoreTenantRequest;
 use App\Http\Requests\Tenants\UpdateTenantRequest;
 use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,8 +26,11 @@ class TenantController extends Controller
     {
         $this->authorize('viewAny', Tenant::class);
 
+        /** @var User $user */
+        $user = $request->user();
+
         return Inertia::render('Tenants/Index', [
-            'tenants' => $request->user()->tenants,
+            'tenants' => $user->tenants,
         ]);
     }
 
@@ -43,12 +47,15 @@ class TenantController extends Controller
     ): RedirectResponse {
         $this->authorize('create', Tenant::class);
 
-        $action->execute($request->user(), $request->validated());
+        /** @var User $user */
+        $user = $request->user();
+
+        $action->execute($user, $request->validated());
 
         return redirect()->route('tenants.index');
     }
 
-    public function show(Tenant $tenant): Response
+    public function settings(Tenant $tenant): Response
     {
         $this->authorize('view', $tenant);
 

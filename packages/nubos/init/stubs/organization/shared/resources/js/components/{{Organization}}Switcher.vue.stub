@@ -1,0 +1,83 @@
+<script setup lang="ts">
+import { Link, usePage } from '@inertiajs/vue3';
+import { ChevronsUpDown, Check, Plus } from 'lucide-vue-next';
+import { computed } from 'vue';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    useSidebar,
+} from '@/components/ui/sidebar';
+
+interface {{Organization}} {
+    id: string;
+    name: string;
+    slug: string;
+    is_personal?: boolean;
+}
+
+const page = usePage();
+const {{organizations}} = computed<{{Organization}}[]>(() => page.props.{{organizations}} as {{Organization}}[]);
+const current{{Organization}} = computed<{{Organization}} | null>(() => page.props.current{{Organization}} as {{Organization}} | null);
+const { isMobile, state } = useSidebar();
+</script>
+
+<template>
+    <SidebarMenu>
+        <SidebarMenuItem>
+            <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                    <SidebarMenuButton
+                        size="lg"
+                        class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                    >
+                        <div class="flex flex-col gap-0.5 leading-none" v-if="current{{Organization}}">
+                            <span class="font-semibold">{{ current{{Organization}}.name }}</span>
+                            <span class="text-xs text-muted-foreground">{{ current{{Organization}}.slug }}</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5 leading-none" v-else>
+                            <span class="text-muted-foreground">Select {{organization}}</span>
+                        </div>
+                        <ChevronsUpDown class="ml-auto size-4" />
+                    </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                    class="w-(--reka-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                    :side="isMobile ? 'bottom' : state === 'collapsed' ? 'left' : 'bottom'"
+                    align="start"
+                    :side-offset="4"
+                >
+                    <DropdownMenuLabel>{{Organizations}}</DropdownMenuLabel>
+                    <DropdownMenuItem
+                        v-for="{{organization}} in {{organizations}}"
+                        :key="{{organization}}.id"
+                        as-child
+                    >
+                        <Link :href="`/{{organizations}}/${{{organization}}.id}/dashboard`" class="flex items-center gap-2">
+                            <span class="flex-1 truncate">{{ {{organization}}.name }}</span>
+                            <Check
+                                v-if="current{{Organization}}?.id === {{organization}}.id"
+                                class="size-4 shrink-0"
+                            />
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem as-child>
+                        <Link href="/{{organizations}}/create" class="flex items-center gap-2">
+                            <Plus class="size-4" />
+                            <span>Create {{organization}}</span>
+                        </Link>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </SidebarMenuItem>
+    </SidebarMenu>
+</template>

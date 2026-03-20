@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+
+
+use App\Traits\HasWorkspaces;
+use App\Traits\HasTeams;
 use App\Traits\BelongsToTenant;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Salutation;
@@ -21,6 +25,8 @@ class User extends Authenticatable
     use BelongsToTenant;
     use TwoFactorAuthenticatable;
 
+    use HasTeams;
+    use HasWorkspaces;
     /**
      * @var list<string>
      */
@@ -30,6 +36,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'current_team_id',
     ];
 
     /**

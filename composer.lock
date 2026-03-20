@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "190bae31a16c577db6d75e228ef148b5",
+    "content-hash": "2fe75da995e4ffbcb75306d92cc9aea1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2750,19 +2750,18 @@
             "dist": {
                 "type": "path",
                 "url": "packages/nubos/init",
-                "reference": "ee2cc1f4060fb9bfedd0b39286d1fd5ef78dc486"
+                "reference": "4cf236e0a526320c54e408905940c0deb4687392"
             },
             "require": {
                 "illuminate/console": "^12.0",
-                "illuminate/filesystem": "^12.0",
                 "illuminate/support": "^12.0",
-                "php": "^8.4"
+                "php": "^8.2"
             },
             "type": "library",
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Nubos\\Init\\NubosInitServiceProvider"
+                        "Nubos\\Init\\Providers\\NubosInitServiceProvider"
                     ]
                 }
             },
@@ -2771,15 +2770,10 @@
                     "Nubos\\Init\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Nubos\\Init\\Tests\\": "tests/"
-                }
-            },
             "license": [
                 "MIT"
             ],
-            "description": "Nubos organization scaffolding — interactive setup for Team, Workspace, or Tenant structures.",
+            "description": "Nubos StarterKit initialization package",
             "transport-options": {
                 "symlink": true,
                 "relative": true

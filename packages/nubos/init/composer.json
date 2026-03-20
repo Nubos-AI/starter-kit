@@ -1,12 +1,11 @@
 {
     "name": "nubos/init",
-    "description": "Nubos organization scaffolding — interactive setup for Team, Workspace, or Tenant structures.",
+    "description": "Nubos StarterKit initialization package",
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": "^8.4",
+        "php": "^8.2",
         "illuminate/console": "^12.0",
-        "illuminate/filesystem": "^12.0",
         "illuminate/support": "^12.0"
     },
     "autoload": {
@@ -14,18 +13,12 @@
             "Nubos\\Init\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Nubos\\Init\\Tests\\": "tests/"
-        }
-    },
     "extra": {
         "laravel": {
             "providers": [
-                "Nubos\\Init\\NubosInitServiceProvider"
+                "Nubos\\Init\\Providers\\NubosInitServiceProvider"
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "minimum-stability": "stable"
 }

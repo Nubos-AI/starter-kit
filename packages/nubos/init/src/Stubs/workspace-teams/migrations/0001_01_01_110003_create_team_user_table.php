@@ -15,8 +15,8 @@ return new class extends Migration
             $table->foreignUuid('team_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->string('role')->nullable();
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
 
             $table->unique(['team_id', 'user_id']);
         });

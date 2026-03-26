@@ -19,13 +19,11 @@ class Team extends Model
     use SoftDeletes;
     // @nubos:inject-traits
 
-    public $incrementing = false;
-    protected $keyType = 'string';
     protected $fillable = [
         'workspace_id',
-        'name',
-        'slug',
         'owner_id',
+        'slug',
+        'name',
     ];
 
     public function workspace(): BelongsTo
@@ -43,10 +41,5 @@ class Team extends Model
         return $this->belongsToMany(User::class)
             ->withPivot('role')
             ->withTimestamps();
-    }
-
-    protected function casts(): array
-    {
-        return [];
     }
 }

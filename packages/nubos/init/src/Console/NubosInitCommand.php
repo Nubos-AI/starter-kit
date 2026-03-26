@@ -8,18 +8,19 @@ use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use Nubos\Init\Enums\DatabaseStrategy;
-use Nubos\Init\Enums\OrganizationType;
-use Nubos\Init\Enums\SubStructure;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\select;
 
+use Nubos\Init\Enums\DatabaseStrategy;
+use Nubos\Init\Enums\OrganizationType;
+use Nubos\Init\Enums\SubStructure;
+
 final class NubosInitCommand extends Command
 {
-    private const MIGRATION_NUMBER_REMAP = [
+    private const array MIGRATION_NUMBER_REMAP = [
         '110000' => '120003',
         '110001' => '120004',
         '110002' => '120006',
@@ -27,21 +28,21 @@ final class NubosInitCommand extends Command
         '110004' => '120005',
         '110005' => '120008',
     ];
-    private const MULTI_DB_FIELDS = [
+    private const array MULTI_DB_FIELDS = [
         '            $table->string(\'db_host\')->default(\'127.0.0.1\');',
         '            $table->integer(\'db_port\')->default(5432);',
         '            $table->string(\'db_database\');',
         '            $table->string(\'db_username\');',
         '            $table->text(\'db_password\');',
     ];
-    private const MULTI_DB_FACTORY_FIELDS = [
+    private const array MULTI_DB_FACTORY_FIELDS = [
         "            'db_host' => '127.0.0.1',",
         "            'db_port' => 5432,",
         "            'db_database' => 'tenant_' . fake()->slug(2),",
         "            'db_username' => 'tenant_user',",
         "            'db_password' => fake()->password(),",
     ];
-    private const TENANT_FK_FIELDS = [
+    private const array TENANT_FK_FIELDS = [
         '            $table->foreignUuid(\'tenant_id\')->constrained()->cascadeOnDelete();',
     ];
 
@@ -77,6 +78,9 @@ final class NubosInitCommand extends Command
         };
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     private function isAlreadyInitialized(): bool
     {
         $configPath = config_path('nubos.php');
@@ -90,23 +94,12 @@ final class NubosInitCommand extends Command
         return str_contains($content, 'organization_type');
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     private function handleTeam(): int
     {
-        $config = [
-            'organization_type' => 'team',
-            'organization_model' => 'App\\Models\\Team::class',
-            'has_sub_teams' => false,
-        ];
-
-        $this->copyTeamStubs('Team', 'team', 'teams', 'Teams');
-        $this->compactStandaloneMigrationNumbers('team');
-        $this->addTraitToUserModel('HasTeams', 'App\\Traits\\HasTeams');
-        $this->writeSeeder('team');
-        $this->writeConfig($config);
-
-        info('Nubos initialized with Team organization.');
-
-        return self::SUCCESS;
+        return $this->installOrganization('Team', 'team', 'teams', 'Teams');
     }
 
     /**
@@ -120,21 +113,7 @@ final class NubosInitCommand extends Command
         );
 
         if (!$hasTeams) {
-            $config = [
-                'organization_type' => 'workspace',
-                'organization_model' => 'App\\Models\\Workspace::class',
-                'has_sub_teams' => false,
-            ];
-
-            $this->copyTeamStubs('Workspace', 'workspace', 'workspaces', 'Workspaces');
-            $this->compactStandaloneMigrationNumbers('workspace');
-            $this->addTraitToUserModel('HasWorkspaces', 'App\\Traits\\HasWorkspaces');
-            $this->writeSeeder('workspace');
-            $this->writeConfig($config);
-
-            info('Nubos initialized with Workspace organization.');
-
-            return self::SUCCESS;
+            return $this->installOrganization('Workspace', 'workspace', 'workspaces', 'Workspaces');
         }
 
         $config = [
@@ -148,13 +127,49 @@ final class NubosInitCommand extends Command
         $this->copyWorkspaceTeamsStubs();
         $this->injectTeamsRelationToWorkspaceModel();
         $this->replaceRedirectMiddlewareForWorkspaceTeams();
-        $this->addTeamRoutesToOrganizationProvider();
-        $this->addTraitToUserModel('HasWorkspaces', 'App\\Traits\\HasWorkspaces');
-        $this->addTraitToUserModel('HasTeams', 'App\\Traits\\HasTeams');
+        $this->addTraitToUserModel('HasWorkspaces', 'App\\Traits\\Workspaces\\HasWorkspaces');
+        $this->addTraitToUserModel('HasTeams', 'App\\Traits\\Teams\\HasTeams');
+        $this->writeWebRoutes(
+            [
+                ['SetCurrentWorkspace', 'App\\Http\\Middleware\\SetCurrentWorkspace'],
+                ['SetCurrentTeam', 'App\\Http\\Middleware\\SetCurrentTeam'],
+            ],
+            'workspaces/{workspace}/teams/{team}',
+        );
         $this->writeSeeder('workspace-teams');
         $this->writeConfig($config);
 
         info('Nubos initialized with Workspace + Teams organization.');
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * @throws FileNotFoundException
+     */
+    private function installOrganization(
+        string $model,
+        string $modelSnake,
+        string $modelsPlural,
+        string $modelsPascalPlural,
+    ): int {
+        $config = [
+            'organization_type' => $modelSnake,
+            'organization_model' => "App\\Models\\{$model}::class",
+            'has_sub_teams' => false,
+        ];
+
+        $this->copyTeamStubs($model, $modelSnake, $modelsPlural, $modelsPascalPlural);
+        $this->compactStandaloneMigrationNumbers($modelSnake);
+        $this->addTraitToUserModel("Has{$modelsPascalPlural}", "App\\Traits\\{$modelsPascalPlural}\\Has{$modelsPascalPlural}");
+        $this->writeWebRoutes(
+            [["SetCurrent{$model}", "App\\Http\\Middleware\\SetCurrent{$model}"]],
+            "{$modelsPlural}/{{$modelSnake}}",
+        );
+        $this->writeSeeder($modelSnake);
+        $this->writeConfig($config);
+
+        info("Nubos initialized with {$model} organization.");
 
         return self::SUCCESS;
     }
@@ -187,14 +202,43 @@ final class NubosInitCommand extends Command
 
         $this->copyTenantStubs($isMultiDb);
         $this->copyTenantSubOrgStubs($subStructure);
-        $this->addTraitToUserModel('BelongsToTenant', 'App\\Traits\\BelongsToTenant');
-        $this->addTenantSubOrgTraitsToUserModel($subStructure);
+        $this->addTraitToUserModel('BelongsToTenant', 'App\\Traits\\Tenants\\BelongsToTenant');
+
+        if (in_array($subStructure, [SubStructure::Workspaces, SubStructure::WorkspacesAndTeams], true)) {
+            $this->addTraitToUserModel('HasWorkspaces', 'App\\Traits\\Workspaces\\HasWorkspaces');
+        }
+
+        if (in_array($subStructure, [SubStructure::Teams, SubStructure::WorkspacesAndTeams], true)) {
+            $this->addTraitToUserModel('HasTeams', 'App\\Traits\\Teams\\HasTeams');
+        }
+        $this->writeWebRoutes(...$this->resolveWebRouteParams($subStructure));
         $this->writeSeeder('tenant', $subOrganization);
         $this->writeConfig($config);
 
         info('Nubos initialized with Tenant organization.');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @return array{0: list<array{0: string, 1: string}>, 1: string|null}
+     */
+    private function resolveWebRouteParams(SubStructure $subStructure): array
+    {
+        $middleware = [['TenantIdentification', 'App\\Http\\Middleware\\TenantIdentification']];
+        $prefix = null;
+
+        if (in_array($subStructure, [SubStructure::Workspaces, SubStructure::WorkspacesAndTeams], true)) {
+            $middleware[] = ['SetCurrentWorkspace', 'App\\Http\\Middleware\\SetCurrentWorkspace'];
+            $prefix = 'workspaces/{workspace}';
+        }
+
+        if (in_array($subStructure, [SubStructure::Teams, SubStructure::WorkspacesAndTeams], true)) {
+            $middleware[] = ['SetCurrentTeam', 'App\\Http\\Middleware\\SetCurrentTeam'];
+            $prefix = $prefix !== null ? $prefix . '/teams/{team}' : 'teams/{team}';
+        }
+
+        return [$middleware, $prefix];
     }
 
     private function resolveSubOrganization(SubStructure $subStructure): ?string
@@ -207,7 +251,9 @@ final class NubosInitCommand extends Command
         };
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * @return array<string, mixed>
+     */
     private function resolveSubTeamConfig(SubStructure $subStructure): array
     {
         return match ($subStructure) {
@@ -237,8 +283,8 @@ final class NubosInitCommand extends Command
         $this->copyDirectory($stubPath, [], function (string $content) use ($isMultiDb): string {
             if ($isMultiDb) {
                 $content = $this->injectFields($content, self::MULTI_DB_FIELDS);
-                $content = $this->injectFactoryFields($content, self::MULTI_DB_FACTORY_FIELDS);
-                $content = $this->injectTrait($content, 'HasTenantDatabase', 'App\\Traits\\HasTenantDatabase');
+                $content = $this->injectFields($content, self::MULTI_DB_FACTORY_FIELDS, 'inject-factory-fields');
+                $content = $this->injectTrait($content, 'HasTenantDatabase', 'App\\Traits\\Tenants\\HasTenantDatabase');
                 $content = $this->injectMultiDbModelFields($content);
                 $content = $this->keepMultiDbCode($content);
             } else {
@@ -249,8 +295,8 @@ final class NubosInitCommand extends Command
         });
 
         if (!$isMultiDb) {
-            $this->files->delete(app_path('Traits/HasTenantDatabase.php'));
-            $this->files->delete(app_path('Traits/TenantAware.php'));
+            $this->files->delete(app_path('Traits/Tenants/HasTenantDatabase.php'));
+            $this->files->delete(app_path('Traits/Tenants/TenantAware.php'));
             $this->files->delete(app_path('Actions/Tenants/ConfigureTenantDatabaseAction.php'));
             $this->files->delete(app_path('Queue/Middleware/TenantAwareJob.php'));
             $this->files->delete(base_path('tests/Feature/TenantMultiDbTest.php'));
@@ -281,7 +327,6 @@ final class NubosInitCommand extends Command
             $this->copyWorkspaceTeamsStubs(true);
             $this->injectTeamsRelationToWorkspaceModel();
             $this->replaceRedirectMiddlewareForWorkspaceTeams();
-            $this->addTeamRoutesToOrganizationProvider();
             $this->injectTenantTestSetup('Workspace', 'workspace', 'workspaces');
             $this->injectTenantTestSetup('Team', 'team', 'teams');
         }
@@ -306,7 +351,7 @@ final class NubosInitCommand extends Command
         $this->copyDirectory($stubPath, $replacements, function (string $content) use ($underTenant): string {
             if ($underTenant) {
                 $content = $this->injectFields($content, self::TENANT_FK_FIELDS);
-                $content = $this->injectTrait($content, 'TenantScope', 'App\\Traits\\TenantScope');
+                $content = $this->injectTrait($content, 'TenantScope', 'App\\Traits\\Tenants\\TenantScope');
                 $content = $this->injectTenantMiddleware($content);
                 $content = $this->scopeSlugUniqueness($content);
             }
@@ -322,7 +367,7 @@ final class NubosInitCommand extends Command
         $this->copyDirectory($stubPath, [], function (string $content) use ($underTenant): string {
             if ($underTenant) {
                 $content = $this->injectFields($content, self::TENANT_FK_FIELDS);
-                $content = $this->injectTrait($content, 'TenantScope', 'App\\Traits\\TenantScope');
+                $content = $this->injectTrait($content, 'TenantScope', 'App\\Traits\\Tenants\\TenantScope');
                 $content = $this->injectTenantMiddleware($content);
             }
 
@@ -330,7 +375,9 @@ final class NubosInitCommand extends Command
         }, $underTenant);
     }
 
-    /** @param array<string, string> $replacements */
+    /**
+     * @param array<string, string> $replacements
+     */
     private function copyDirectory(
         string $stubPath,
         array $replacements,
@@ -344,12 +391,12 @@ final class NubosInitCommand extends Command
         $files = $this->files->allFiles($stubPath);
 
         foreach ($files as $file) {
-            $relativePath = $file->getRelativePathname();
-            $content = $file->getContents();
-
-            $content = $this->applyReplacements($content, $replacements);
-            $relativePath = $this->applyReplacements($relativePath, $replacements);
-            $relativePath = str_replace('.stub.php', '.php', $relativePath);
+            $content = $this->applyReplacements($file->getContents(), $replacements);
+            $relativePath = str_replace(
+                '.stub.php',
+                '.php',
+                $this->applyReplacements($file->getRelativePathname(), $replacements),
+            );
 
             if ($contentTransformer !== null) {
                 $content = $contentTransformer($content);
@@ -368,7 +415,9 @@ final class NubosInitCommand extends Command
         }
     }
 
-    /** @param array<string, string> $replacements */
+    /**
+     * @param array<string, string> $replacements
+     */
     private function applyReplacements(string $subject, array $replacements): string
     {
         if ($replacements === []) {
@@ -382,22 +431,14 @@ final class NubosInitCommand extends Command
         );
     }
 
-    /** @param list<string> $fields */
-    private function injectFactoryFields(string $content, array $fields): string
+    /**
+     * @param list<string> $fields
+     */
+    private function injectFields(string $content, array $fields, string $marker = 'inject-fields'): string
     {
         return str_replace(
-            '// @nubos:inject-factory-fields',
-            implode("\n", $fields) . "\n            // @nubos:inject-factory-fields",
-            $content,
-        );
-    }
-
-    /** @param list<string> $fields */
-    private function injectFields(string $content, array $fields): string
-    {
-        return str_replace(
-            '// @nubos:inject-fields',
-            implode("\n", $fields) . "\n            // @nubos:inject-fields",
+            "// @nubos:{$marker}",
+            implode("\n", $fields) . "\n            // @nubos:{$marker}",
             $content,
         );
     }
@@ -410,13 +451,11 @@ final class NubosInitCommand extends Command
             $content,
         );
 
-        $content = str_replace(
+        return str_replace(
             '// @nubos:inject-imports',
             "use {$traitFqcn};\n// @nubos:inject-imports",
             $content,
         );
-
-        return $content;
     }
 
     private function removeMarkers(string $content): string
@@ -432,9 +471,7 @@ final class NubosInitCommand extends Command
             $content = str_replace($marker, '', $content);
         }
 
-        $content = preg_replace('/\n\s*\n\s*\n/', "\n\n", $content);
-
-        return $content;
+        return preg_replace('/\n\s*\n\s*\n/', "\n\n", $content);
     }
 
     private function removeMultiDbBlocks(string $content): string
@@ -455,7 +492,7 @@ final class NubosInitCommand extends Command
     {
         foreach (self::MIGRATION_NUMBER_REMAP as $from => $to) {
             if (str_contains($relativePath, (string) $from)) {
-                $relativePath = str_replace((string) $from, (string) $to, $relativePath);
+                $relativePath = str_replace((string) $from, $to, $relativePath);
                 break;
             }
         }
@@ -489,6 +526,51 @@ final class NubosInitCommand extends Command
         }
 
         return base_path($relativePath);
+    }
+
+    /**
+     * @param list<array{0: string, 1: string}> $extraMiddleware
+     */
+    private function writeWebRoutes(array $extraMiddleware, ?string $prefix = null): void
+    {
+        $imports = [
+            'use Illuminate\Support\Facades\Route;',
+            'use Laravel\Fortify\Features;',
+        ];
+        $middlewareEntries = ["'auth'", "'verified'"];
+
+        foreach ($extraMiddleware as [$className, $fqcn]) {
+            $imports[] = "use {$fqcn};";
+            $middlewareEntries[] = "{$className}::class";
+        }
+
+        sort($imports);
+
+        $importsBlock = implode("\n", $imports);
+        $middlewareStr = implode(', ', $middlewareEntries);
+        $prefixLine = $prefix !== null ? "\n    ->prefix('{$prefix}')" : '';
+        $file = <<<PHP
+        <?php
+
+        declare(strict_types=1);
+
+        {$importsBlock}
+
+        Route::inertia('/', 'Welcome', [
+            'canRegister' => Features::enabled(Features::registration()),
+        ])->name('home');
+
+        Route::middleware([{$middlewareStr}])
+            {$prefixLine}
+            ->group(function () {
+                Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+            }
+        );
+
+        require __DIR__ . '/settings.php';
+        PHP;
+
+        $this->files->put(base_path('routes/web.php'), $file);
     }
 
     private function writeSeeder(string $type, ?string $subOrganization = null): void
@@ -717,6 +799,9 @@ final class NubosInitCommand extends Command
         PHP;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     private function addTraitToUserModel(string $traitShortName, string $traitFqcn): void
     {
         $userModelPath = app_path('Models/User.php');
@@ -762,20 +847,9 @@ final class NubosInitCommand extends Command
         info("User model updated: added {$traitShortName} trait to app/Models/User.php");
     }
 
-    private function addTenantSubOrgTraitsToUserModel(SubStructure $subStructure): void
-    {
-        match ($subStructure) {
-            SubStructure::Teams => $this->addTraitToUserModel('HasTeams', 'App\\Traits\\HasTeams'),
-            SubStructure::Workspaces => $this->addTraitToUserModel('HasWorkspaces', 'App\\Traits\\HasWorkspaces'),
-            SubStructure::WorkspacesAndTeams => (function (): void {
-                $this->addTraitToUserModel('HasWorkspaces', 'App\\Traits\\HasWorkspaces');
-                $this->addTraitToUserModel('HasTeams', 'App\\Traits\\HasTeams');
-            })(),
-            SubStructure::None => null,
-        };
-    }
-
-    /** @param array<string, mixed> $config */
+    /**
+     * @param array<string, mixed> $config
+     */
     private function writeConfig(array $config): void
     {
         $content = "<?php\n\ndeclare(strict_types=1);\n\nreturn " . $this->arrayToPhp($config, 1) . ";\n";
@@ -784,7 +858,9 @@ final class NubosInitCommand extends Command
         $this->files->put(config_path('nubos.php'), $content);
     }
 
-    /** @param array<string, mixed> $array */
+    /**
+     * @param array<string, mixed> $array
+     */
     private function arrayToPhp(array $array, int $indent = 0): string
     {
         $pad = str_repeat('    ', $indent);
@@ -817,20 +893,8 @@ final class NubosInitCommand extends Command
     private function injectMultiDbModelFields(string $content): string
     {
         $content = str_replace(
-            "        'owner_id',\n    ];",
-            "        'owner_id',\n        'db_host',\n        'db_port',\n        'db_database',\n        'db_username',\n        'db_password',\n    ];",
-            $content,
-        );
-
-        $content = str_replace(
-            'protected $hidden = [];',
-            "protected \$hidden = [\n        'db_password',\n    ];",
-            $content,
-        );
-
-        $content = str_replace(
-            "protected function casts(): array\n    {\n        return [];\n    }",
-            "protected function casts(): array\n    {\n        return [\n            'db_password' => 'encrypted',\n        ];\n    }",
+            "        'name',\n    ];",
+            "        'name',\n        'db_host',\n        'db_port',\n        'db_database',\n        'db_username',\n        'db_password',\n    ];\n\n    protected \$hidden = [\n        'db_password',\n    ];\n\n    protected function casts(): array\n    {\n        return [\n            'db_password' => 'encrypted',\n        ];\n    }",
             $content,
         );
 
@@ -892,29 +956,6 @@ final class NubosInitCommand extends Command
         }
     }
 
-    private function addTeamRoutesToOrganizationProvider(): void
-    {
-        $providerPath = app_path('Providers/NubosOrganizationServiceProvider.php');
-
-        if (!$this->files->exists($providerPath)) {
-            return;
-        }
-
-        $content = $this->files->get($providerPath);
-
-        if (str_contains($content, 'routes/team.php')) {
-            return;
-        }
-
-        $content = preg_replace(
-            '/(loadRoutesFrom\(base_path\(\'routes\/workspace\.php\'\)\);)/',
-            "$1\n        \$this->loadRoutesFrom(base_path('routes/team.php'));",
-            $content,
-        );
-
-        $this->files->put($providerPath, $content);
-    }
-
     private function injectTeamsRelationToWorkspaceModel(): void
     {
         $modelPath = app_path('Models/Workspace.php');
@@ -929,11 +970,19 @@ final class NubosInitCommand extends Command
             return;
         }
 
+        if (!str_contains($content, 'use Illuminate\Database\Eloquent\Relations\HasMany;')) {
+            $content = str_replace(
+                'use Illuminate\Database\Eloquent\Relations\BelongsToMany;',
+                "use Illuminate\Database\Eloquent\Relations\BelongsToMany;\nuse Illuminate\Database\Eloquent\Relations\HasMany;",
+                $content,
+            );
+        }
+
         $relation = <<<'PHP'
 
-    public function teams(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function teams(): HasMany
     {
-        return $this->hasMany(\App\Models\Team::class);
+        return $this->hasMany(Team::class);
     }
 PHP;
 
@@ -973,10 +1022,7 @@ PHP;
 
         $this->files->put($providerPath, $content);
 
-        $orphanedRedirect = app_path('Http/Middleware/RedirectToCurrentWorkspace.php');
-        if (file_exists($orphanedRedirect)) {
-            unlink($orphanedRedirect);
-        }
+        $this->files->delete(app_path('Http/Middleware/RedirectToCurrentWorkspace.php'));
     }
 
     /**

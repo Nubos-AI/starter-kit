@@ -20,14 +20,11 @@ class Tenant extends Model
     use SoftDeletes;
     // @nubos:inject-traits
 
-    public $incrementing = false;
-    protected $keyType = 'string';
     protected $fillable = [
-        'name',
-        'slug',
         'owner_id',
+        'slug',
+        'name',
     ];
-    protected $hidden = [];
 
     public function owner(): BelongsTo
     {
@@ -44,10 +41,5 @@ class Tenant extends Model
     public function domains(): HasMany
     {
         return $this->hasMany(Domain::class);
-    }
-
-    protected function casts(): array
-    {
-        return [];
     }
 }

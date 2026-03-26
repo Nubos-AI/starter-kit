@@ -12,7 +12,5 @@ class NubosTenantServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app['router']->aliasMiddleware('tenant', TenantIdentification::class);
-
-        $this->loadRoutesFrom(base_path('routes/tenant.php'));
     }
 }

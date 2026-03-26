@@ -5,11 +5,15 @@ declare(strict_types=1);
 use Illuminate\Filesystem\Filesystem;
 
 beforeEach(function (): void {
+    $this->originalWebRoutes = file_get_contents(base_path('routes/web.php'));
+    $this->originalUserModel = file_get_contents(app_path('Models/User.php'));
     cleanGeneratedFiles();
 });
 
 afterEach(function (): void {
     cleanGeneratedFiles();
+    file_put_contents(base_path('routes/web.php'), $this->originalWebRoutes);
+    file_put_contents(app_path('Models/User.php'), $this->originalUserModel);
 });
 
 function cleanGeneratedFiles(): void
@@ -20,7 +24,9 @@ function cleanGeneratedFiles(): void
         app_path('Models/Workspace.php'),
         app_path('Models/Tenant.php'),
         app_path('Models/Domain.php'),
-        app_path('Traits'),
+        app_path('Traits/Teams'),
+        app_path('Traits/Workspaces'),
+        app_path('Traits/Tenants'),
         app_path('Http/Middleware/SetCurrentTeam.php'),
         app_path('Http/Middleware/SetCurrentWorkspace.php'),
         app_path('Http/Middleware/RedirectToCurrentTeam.php'),
@@ -52,9 +58,6 @@ function cleanGeneratedFiles(): void
         base_path('tests/Feature/TenantIsolationTest.php'),
         base_path('tests/Feature/TenantMultiDbTest.php'),
         base_path('tests/Feature/WorkspaceTeamHierarchyTest.php'),
-        base_path('routes/team.php'),
-        base_path('routes/workspace.php'),
-        base_path('routes/tenant.php'),
     ];
 
     $filesystem = new Filesystem();
@@ -113,12 +116,12 @@ describe('P1: Team', function (): void {
         expect(file_exists(base_path('database/migrations/0001_01_01_110002_add_current_team_id_to_users_table.php')))->toBeTrue();
 
         $migrationContent = file_get_contents(base_path('database/migrations/0001_01_01_110000_create_teams_table.php'));
-        expect($migrationContent)->toContain("Schema::create('teams'");
+        expect($migrationContent)->toContain("Schema::create(")->toContain("'teams'");
         expect($migrationContent)->not->toContain('@nubos:inject');
         expect($migrationContent)->not->toContain('tenant_id');
 
-        expect(file_exists(app_path('Traits/HasTeams.php')))->toBeTrue();
-        $traitContent = file_get_contents(app_path('Traits/HasTeams.php'));
+        expect(file_exists(app_path('Traits/Teams/HasTeams.php')))->toBeTrue();
+        $traitContent = file_get_contents(app_path('Traits/Teams/HasTeams.php'));
         expect($traitContent)->toContain('trait HasTeams');
         expect($traitContent)->toContain('currentTeam()');
 
@@ -133,16 +136,18 @@ describe('P1: Team', function (): void {
         expect(file_exists(app_path('Events/Teams/TeamMemberAdded.php')))->toBeTrue();
         expect(file_exists(app_path('Events/Teams/TeamMemberRemoved.php')))->toBeTrue();
 
-        expect(file_exists(base_path('routes/team.php')))->toBeTrue();
-
         expect(file_exists(app_path('Providers/NubosOrganizationServiceProvider.php')))->toBeTrue();
+
+        $providerContent = file_get_contents(app_path('Providers/NubosOrganizationServiceProvider.php'));
+        expect($providerContent)->not->toContain('loadRoutesFrom');
+
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
+        expect($webRoutes)->toContain('SetCurrentTeam::class');
+        expect($webRoutes)->toContain("->prefix('teams/{team}')");
 
         expect(file_exists(base_path('database/seeders/NubosSeeder.php')))->toBeTrue();
         $seederContent = file_get_contents(base_path('database/seeders/NubosSeeder.php'));
         expect($seederContent)->toContain('CreateTeamAction');
-
-        $providerContent = file_get_contents(app_path('Providers/NubosOrganizationServiceProvider.php'));
-        expect($providerContent)->toContain("loadRoutesFrom(base_path('routes/team.php'))");
 
         expect(file_exists(base_path('database/factories/TeamFactory.php')))->toBeTrue();
         $factoryContent = file_get_contents(base_path('database/factories/TeamFactory.php'));
@@ -173,7 +178,7 @@ describe('P1: Team', function (): void {
 
         $files = [
             app_path('Models/Team.php'),
-            app_path('Traits/HasTeams.php'),
+            app_path('Traits/Teams/HasTeams.php'),
             app_path('Http/Middleware/SetCurrentTeam.php'),
             app_path('Actions/Teams/CreateTeamAction.php'),
             app_path('Events/Teams/TeamCreated.php'),
@@ -218,11 +223,13 @@ describe('P2: Workspace (without Teams)', function (): void {
         expect(file_exists(app_path('Actions/Workspaces/AddWorkspaceMemberAction.php')))->toBeTrue();
         expect(file_exists(app_path('Actions/Workspaces/RemoveWorkspaceMemberAction.php')))->toBeTrue();
 
-        expect(file_exists(app_path('Traits/HasWorkspaces.php')))->toBeTrue();
-
-        expect(file_exists(base_path('routes/workspace.php')))->toBeTrue();
+        expect(file_exists(app_path('Traits/Workspaces/HasWorkspaces.php')))->toBeTrue();
 
         expect(file_exists(app_path('Providers/NubosOrganizationServiceProvider.php')))->toBeTrue();
+
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
+        expect($webRoutes)->toContain('SetCurrentWorkspace::class');
+        expect($webRoutes)->toContain("->prefix('workspaces/{workspace}')");
 
         expect(file_exists(base_path('database/seeders/NubosSeeder.php')))->toBeTrue();
         $seederContent = file_get_contents(base_path('database/seeders/NubosSeeder.php'));
@@ -237,7 +244,7 @@ describe('P2: Workspace (without Teams)', function (): void {
 
         $files = [
             app_path('Models/Workspace.php'),
-            app_path('Traits/HasWorkspaces.php'),
+            app_path('Traits/Workspaces/HasWorkspaces.php'),
             app_path('Http/Middleware/SetCurrentWorkspace.php'),
             app_path('Actions/Workspaces/CreateWorkspaceAction.php'),
         ];
@@ -277,14 +284,14 @@ describe('P3: Workspace + Teams', function (): void {
         expect(file_exists(base_path('database/migrations/0001_01_01_110004_add_current_workspace_id_to_users_table.php')))->toBeTrue();
         expect(file_exists(base_path('database/migrations/0001_01_01_110005_add_current_team_id_to_users_table.php')))->toBeTrue();
 
-        expect(file_exists(app_path('Traits/HasWorkspaces.php')))->toBeTrue();
-        expect(file_exists(app_path('Traits/HasTeams.php')))->toBeTrue();
+        expect(file_exists(app_path('Traits/Workspaces/HasWorkspaces.php')))->toBeTrue();
+        expect(file_exists(app_path('Traits/Teams/HasTeams.php')))->toBeTrue();
 
         $middleware = file_get_contents(app_path('Http/Middleware/SetCurrentTeam.php'));
         expect($middleware)->toContain('current_workspace');
 
-        $route = file_get_contents(base_path('routes/team.php'));
-        expect($route)->toContain('workspaces/{workspace}/teams/{team}');
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
+        expect($webRoutes)->toContain('workspaces/{workspace}/teams/{team}');
 
         expect(file_exists(app_path('Http/Middleware/SetCurrentWorkspace.php')))->toBeTrue();
         expect(file_exists(app_path('Http/Middleware/SetCurrentTeam.php')))->toBeTrue();
@@ -309,8 +316,12 @@ describe('P3: Workspace + Teams', function (): void {
         expect($seederContent)->not->toContain('Team::query()->create');
 
         $providerContent = file_get_contents(app_path('Providers/NubosOrganizationServiceProvider.php'));
-        expect($providerContent)->toContain("loadRoutesFrom(base_path('routes/workspace.php'))");
-        expect($providerContent)->toContain("loadRoutesFrom(base_path('routes/team.php'))");
+        expect($providerContent)->not->toContain('loadRoutesFrom');
+
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
+        expect($webRoutes)->toContain('SetCurrentWorkspace::class');
+        expect($webRoutes)->toContain('SetCurrentTeam::class');
+        expect($webRoutes)->toContain("->prefix('workspaces/{workspace}/teams/{team}')");
     });
 
     it('enforces middleware order in routes', function (): void {
@@ -319,9 +330,9 @@ describe('P3: Workspace + Teams', function (): void {
             ->expectsConfirmation('Enable teams within workspaces?', 'yes')
             ->assertSuccessful();
 
-        $route = file_get_contents(base_path('routes/team.php'));
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
 
-        preg_match('/middleware\(\[.*?\]\)/s', $route, $matches);
+        preg_match('/middleware\(\[.*?\]\)/s', $webRoutes, $matches);
         $middlewareLine = $matches[0];
 
         $workspacePos = strpos($middlewareLine, 'SetCurrentWorkspace');
@@ -359,8 +370,8 @@ describe('P4: Tenant Single-DB (no Sub-Orgs)', function (): void {
         expect($migration)->not->toContain('db_host');
         expect($migration)->not->toContain('db_password');
 
-        expect(file_exists(app_path('Traits/TenantScope.php')))->toBeTrue();
-        expect(file_exists(app_path('Traits/BelongsToTenant.php')))->toBeTrue();
+        expect(file_exists(app_path('Traits/Tenants/TenantScope.php')))->toBeTrue();
+        expect(file_exists(app_path('Traits/Tenants/BelongsToTenant.php')))->toBeTrue();
 
         expect(file_exists(app_path('Http/Middleware/TenantIdentification.php')))->toBeTrue();
 
@@ -372,22 +383,20 @@ describe('P4: Tenant Single-DB (no Sub-Orgs)', function (): void {
         expect(file_exists(app_path('Events/Tenants/TenantMemberAdded.php')))->toBeTrue();
         expect(file_exists(app_path('Events/Tenants/TenantMemberRemoved.php')))->toBeTrue();
 
-        expect(file_exists(base_path('routes/tenant.php')))->toBeTrue();
-
         expect(file_exists(app_path('Models/Team.php')))->toBeFalse();
         expect(file_exists(app_path('Models/Workspace.php')))->toBeFalse();
 
-        expect(file_exists(app_path('Traits/HasTenantDatabase.php')))->toBeFalse();
-        expect(file_exists(app_path('Traits/TenantAware.php')))->toBeFalse();
+        expect(file_exists(app_path('Traits/Tenants/HasTenantDatabase.php')))->toBeFalse();
+        expect(file_exists(app_path('Traits/Tenants/TenantAware.php')))->toBeFalse();
         expect(file_exists(app_path('Actions/Tenants/ConfigureTenantDatabaseAction.php')))->toBeFalse();
         expect(file_exists(app_path('Queue/Middleware/TenantAwareJob.php')))->toBeFalse();
 
-        $tenantModel = file_get_contents(app_path('Models/Tenant.php'));
-        expect($tenantModel)->toContain('protected function casts(): array');
-        expect($tenantModel)->toContain('protected $hidden = [];');
-
         $providerContent = file_get_contents(app_path('Providers/NubosTenantServiceProvider.php'));
-        expect($providerContent)->toContain("loadRoutesFrom(base_path('routes/tenant.php'))");
+        expect($providerContent)->not->toContain('loadRoutesFrom');
+
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
+        expect($webRoutes)->toContain('TenantIdentification::class');
+        expect($webRoutes)->not->toContain('->prefix(');
 
         expect(file_exists(base_path('database/factories/TenantFactory.php')))->toBeTrue();
         expect(file_exists(base_path('database/factories/DomainFactory.php')))->toBeTrue();
@@ -419,7 +428,7 @@ describe('P5: Tenant Single-DB + Teams Sub-Org', function (): void {
 
         $teamModel = file_get_contents(app_path('Models/Team.php'));
         expect($teamModel)->toContain('use TenantScope;');
-        expect($teamModel)->toContain('use App\Traits\TenantScope;');
+        expect($teamModel)->toContain('use App\Traits\Tenants\TenantScope;');
         expect($teamModel)->not->toContain('@nubos:inject');
 
         expect(file_exists(base_path('database/migrations/0001_01_01_120003_create_teams_table.php')))->toBeTrue();
@@ -432,8 +441,10 @@ describe('P5: Tenant Single-DB + Teams Sub-Org', function (): void {
 
         expect(file_exists(base_path('database/migrations/0001_01_01_110000_create_teams_table.php')))->toBeFalse();
 
-        $routeContent = file_get_contents(base_path('routes/team.php'));
-        expect($routeContent)->toContain('TenantIdentification::class');
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
+        expect($webRoutes)->toContain('TenantIdentification::class');
+        expect($webRoutes)->toContain('SetCurrentTeam::class');
+        expect($webRoutes)->toContain("->prefix('teams/{team}')");
 
         $migration = file_get_contents(base_path('database/migrations/0001_01_01_120003_create_teams_table.php'));
         expect($migration)->not->toContain("'slug')->unique()");
@@ -455,7 +466,7 @@ describe('P6: Tenant Multi-DB (no Sub-Orgs)', function (): void {
 
         $tenantModel = file_get_contents(app_path('Models/Tenant.php'));
         expect($tenantModel)->toContain('use HasTenantDatabase;');
-        expect($tenantModel)->toContain('use App\Traits\HasTenantDatabase;');
+        expect($tenantModel)->toContain('use App\Traits\Tenants\HasTenantDatabase;');
 
         $migration = file_get_contents(base_path('database/migrations/0001_01_01_120000_create_tenants_table.php'));
         expect($migration)->toContain('db_host');
@@ -464,8 +475,8 @@ describe('P6: Tenant Multi-DB (no Sub-Orgs)', function (): void {
         expect($migration)->toContain('db_username');
         expect($migration)->toContain('db_password');
 
-        expect(file_exists(app_path('Traits/HasTenantDatabase.php')))->toBeTrue();
-        expect(file_exists(app_path('Traits/TenantAware.php')))->toBeTrue();
+        expect(file_exists(app_path('Traits/Tenants/HasTenantDatabase.php')))->toBeTrue();
+        expect(file_exists(app_path('Traits/Tenants/TenantAware.php')))->toBeTrue();
         expect(file_exists(app_path('Queue/Middleware/TenantAwareJob.php')))->toBeTrue();
 
         expect(file_exists(app_path('Actions/Tenants/ConfigureTenantDatabaseAction.php')))->toBeTrue();
@@ -524,11 +535,11 @@ describe('P7: Tenant Multi-DB + Workspaces + Teams', function (): void {
         $tenantMigration = file_get_contents(base_path('database/migrations/0001_01_01_120000_create_tenants_table.php'));
         expect($tenantMigration)->toContain('db_host');
 
-        $wsRoute = file_get_contents(base_path('routes/workspace.php'));
-        expect($wsRoute)->toContain('TenantIdentification::class');
-
-        $teamRoute = file_get_contents(base_path('routes/team.php'));
-        expect($teamRoute)->toContain('TenantIdentification::class');
+        $webRoutes = file_get_contents(base_path('routes/web.php'));
+        expect($webRoutes)->toContain('TenantIdentification::class');
+        expect($webRoutes)->toContain('SetCurrentWorkspace::class');
+        expect($webRoutes)->toContain('SetCurrentTeam::class');
+        expect($webRoutes)->toContain("->prefix('workspaces/{workspace}/teams/{team}')");
 
         $wsMigration = file_get_contents(base_path('database/migrations/0001_01_01_120003_create_workspaces_table.php'));
         expect($wsMigration)->not->toContain("'slug')->unique()");
@@ -555,7 +566,7 @@ describe('Generated code quality', function (): void {
 
         $phpFiles = [
             app_path('Models/Team.php'),
-            app_path('Traits/HasTeams.php'),
+            app_path('Traits/Teams/HasTeams.php'),
             app_path('Http/Middleware/SetCurrentTeam.php'),
             app_path('Actions/Teams/CreateTeamAction.php'),
             app_path('Events/Teams/TeamCreated.php'),

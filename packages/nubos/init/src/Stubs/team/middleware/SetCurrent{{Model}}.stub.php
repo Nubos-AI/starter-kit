@@ -15,15 +15,15 @@ class SetCurrent{{Model}}
     {
         ${{model}} = $request->route('{{model}}');
 
-        if (! ${{model}} instanceof {{Model}}) {
+        if (!${{model}} instanceof {{Model}}) {
             ${{model}} = {{Model}}::query()->where('slug', ${{model}})->first();
         }
 
-        if (! ${{model}}) {
+        if (!${{model}}) {
             abort(404);
         }
 
-        if (! $request->user()->belongsTo{{Model}}(${{model}})) {
+        if (!$request->user()->belongsTo{{Model}}(${{model}})) {
             abort(403);
         }
 

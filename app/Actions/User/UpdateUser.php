@@ -11,15 +11,20 @@ use Illuminate\Validation\Rule;
 
 class UpdateUser
 {
-    /** @param array<string, mixed> $input */
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(User $user, array $input): void
     {
-        $validated = Validator::make($input, [
-            'salutation' => ['nullable', Rule::enum(Salutation::class)],
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-        ])->validate();
+        $validated = Validator::make(
+            $input,
+            [
+                'salutation' => ['nullable', Rule::enum(Salutation::class)],
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            ],
+        )->validate();
 
         $user->fill($validated);
 

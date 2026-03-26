@@ -15,8 +15,8 @@ return new class extends Migration
             $table->foreignUuid('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->string('role')->nullable();
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
 
             $table->unique(['tenant_id', 'user_id']);
         });

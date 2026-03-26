@@ -14,13 +14,13 @@ class RedirectToCurrent{{Model}}
     {
         $user = $request->user();
 
-        if (! $user) {
+        if (!$user) {
             return $next($request);
         }
 
         ${{model}} = $user->current{{Model}} ?? $user->{{models}}()->first();
 
-        if (! ${{model}}) {
+        if (!${{model}}) {
             return $next($request);
         }
 

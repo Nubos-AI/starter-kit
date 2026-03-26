@@ -9,16 +9,20 @@ use App\Models\{{Model}};
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Throwable;
 
 class Create{{Model}}Action
 {
+    /**
+     * @throws Throwable
+     */
     public function execute(User $owner, array $data): {{Model}}
     {
         return DB::transaction(function () use ($owner, $data): {{Model}} {
             ${{model}} = {{Model}}::query()->create([
                 'name' => $data['name'],
-                'slug' => $data['slug'] ?? Str::slug($data['name']),
                 'owner_id' => $owner->id,
+                'slug' => $data['slug'] ?? Str::slug($data['name']),
                 'personal_{{model}}' => $data['personal_{{model}}'] ?? false,
             ]);
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Traits;
+namespace App\Traits\Tenants;
 
 use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

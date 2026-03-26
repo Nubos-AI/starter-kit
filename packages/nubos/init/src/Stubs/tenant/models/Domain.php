@@ -16,12 +16,10 @@ class Domain extends Model
     use HasUuids;
     use SoftDeletes;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
     protected $fillable = [
+        'is_primary',
         'tenant_id',
         'domain',
-        'is_primary',
     ];
 
     public function tenant(): BelongsTo

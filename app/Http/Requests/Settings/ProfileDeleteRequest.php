@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Settings;
 
-use App\Traits\User\PasswordValidationRules;
+use App\Traits\Users\PasswordValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 

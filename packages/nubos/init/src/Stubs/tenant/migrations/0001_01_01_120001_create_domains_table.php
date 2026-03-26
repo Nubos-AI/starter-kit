@@ -13,10 +13,10 @@ return new class extends Migration
         Schema::create('domains', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('tenant_id')->constrained()->cascadeOnDelete();
-            $table->string('domain')->unique();
             $table->boolean('is_primary')->default(false);
-            $table->timestamps();
+            $table->string('domain')->unique();
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 

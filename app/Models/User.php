@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-
-
-use App\Traits\HasWorkspaces;
-use App\Traits\HasTeams;
-use App\Traits\BelongsToTenant;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Salutation;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,27 +18,20 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+    use HasUuids;
     use Notifiable;
-    use BelongsToTenant;
     use TwoFactorAuthenticatable;
 
-    use HasTeams;
-    use HasWorkspaces;
-    /**
-     * @var list<string>
-     */
+    /** @var list<string> */
     protected $fillable = [
         'salutation',
         'first_name',
         'last_name',
         'email',
         'password',
-        'current_team_id',
     ];
 
-    /**
-     * @var list<string>
-     */
+    /** @var list<string> */
     protected $hidden = [
         'password',
         'two_factor_secret',
@@ -49,14 +39,19 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function getNameAttribute(): string
+    /** @var list<string> */
+    protected $appends = [
+        'name',
+    ];
+
+    protected function name(): Attribute
     {
-        return "{$this->first_name} {$this->last_name}";
+        return Attribute::make(
+            get: fn () => "{$this->first_name} {$this->last_name}",
+        );
     }
 
     /**
-     * Get the attributes that should be cast.
-     *
      * @return array<string, string>
      */
     protected function casts(): array

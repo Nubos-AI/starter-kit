@@ -19,10 +19,7 @@ class {{Model}} extends Model
     use SoftDeletes;
     // @nubos:inject-traits
 
-    protected $keyType = 'string';
-
-    public $incrementing = false;
-
+    /** @var list<string> */
     protected $fillable = [
         'name',
         'slug',

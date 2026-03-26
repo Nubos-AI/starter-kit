@@ -12,13 +12,13 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            // @nubos:inject-fields
-            $table->foreignUuid('workspace_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('slug');
             $table->foreignUuid('owner_id')->constrained('users')->cascadeOnDelete();
-            $table->timestamps();
+            $table->foreignUuid('workspace_id')->constrained()->cascadeOnDelete();
+            $table->string('slug');
+            // @nubos:inject-fields
+            $table->string('name');
             $table->softDeletes();
+            $table->timestamps();
 
             $table->unique(['workspace_id', 'slug']);
         });

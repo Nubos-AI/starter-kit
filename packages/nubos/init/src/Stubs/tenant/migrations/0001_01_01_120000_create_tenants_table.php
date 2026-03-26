@@ -12,12 +12,12 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('slug')->unique();
             $table->foreignUuid('owner_id')->constrained('users')->cascadeOnDelete();
+            $table->string('slug')->unique();
+            $table->string('name');
             // @nubos:inject-fields
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Traits;
+namespace App\Traits\{{Models}};
 
 use App\Models\{{Model}};
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -10,16 +10,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('{{model}}_user', function (Blueprint $table): void {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('{{model}}_id')->constrained('{{models}}')->cascadeOnDelete();
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->string('role')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::create(
+            '{{model}}_user',
+            function (Blueprint $table): void {
+                $table->uuid('id')->primary();
+                $table->foreignUuid('{{model}}_id')->constrained('{{models}}')->cascadeOnDelete();
+                $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
+                $table->string('role')->nullable();
+                $table->softDeletes();
+                $table->timestamps();
 
-            $table->unique(['{{model}}_id', 'user_id']);
-        });
+                $table->unique(['{{model}}_id', 'user_id']);
+            },
+        );
     }
 
     public function down(): void

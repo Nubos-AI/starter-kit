@@ -9,12 +9,16 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-/** @extends Factory<{{Model}}> */
+/**
+ * @extends Factory<{{Model}}>
+ */
 class {{Model}}Factory extends Factory
 {
     protected $model = {{Model}}::class;
 
-    /** @return array<string, mixed> */
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         $name = fake()->company();

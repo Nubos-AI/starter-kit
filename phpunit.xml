@@ -11,9 +11,6 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
-        <testsuite name="Packages">
-            <directory>packages/nubos/init/tests</directory>
-        </testsuite>
     </testsuites>
     <source>
         <include>

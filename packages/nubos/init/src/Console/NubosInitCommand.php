@@ -136,6 +136,10 @@ final class NubosInitCommand extends Command
             ],
             'workspaces/{workspace}/teams/{team}',
         );
+        $this->writeScopeResolver([
+            "\$this->request->attributes->get('current_workspace')",
+            "\$this->request->attributes->get('current_team')",
+        ]);
         $this->writeSeeder('workspace-teams');
         $this->writeConfig($config);
 
@@ -166,6 +170,9 @@ final class NubosInitCommand extends Command
             [["SetCurrent{$model}", "App\\Http\\Middleware\\SetCurrent{$model}"]],
             "{$modelsPlural}/{{$modelSnake}}",
         );
+        $this->writeScopeResolver([
+            "\$this->request->attributes->get('current_{$modelSnake}')",
+        ]);
         $this->writeSeeder($modelSnake);
         $this->writeConfig($config);
 
@@ -212,6 +219,7 @@ final class NubosInitCommand extends Command
             $this->addTraitToUserModel('HasTeams', 'App\\Traits\\Teams\\HasTeams');
         }
         $this->writeWebRoutes(...$this->resolveWebRouteParams($subStructure));
+        $this->writeScopeResolver($this->resolveScopeResolverScopes($subStructure));
         $this->writeSeeder('tenant', $subOrganization);
         $this->writeConfig($config);
 
@@ -512,6 +520,7 @@ final class NubosInitCommand extends Command
             'actions/' => app_path('Actions/'),
             'events/' => app_path('Events/'),
             'providers/' => app_path('Providers/'),
+            'services/' => app_path('Services/'),
             'seeders/' => base_path('database/seeders/'),
             'tests/' => base_path('tests/Feature/'),
             'routes/' => base_path('routes/'),
@@ -579,6 +588,186 @@ final class NubosInitCommand extends Command
 
         $this->files->ensureDirectoryExists(dirname($seederPath));
         $this->files->put($seederPath, $this->generateSeederContent($type, $subOrganization));
+
+        $orgRolesSeederPath = base_path('database/seeders/OrgRolesAndPermissionsSeeder.php');
+        $this->files->put($orgRolesSeederPath, $this->generateOrgRolesSeeder($type, $subOrganization));
+    }
+
+    private function generateOrgRolesSeeder(string $type, ?string $subOrganization): string
+    {
+        $scope = match ($type) {
+            'team' => 'team',
+            'workspace', 'workspace-teams' => 'workspace',
+            'tenant' => 'tenant',
+            default => 'organization',
+        };
+
+        $hasSubTeams = in_array($subOrganization, ['team', 'workspace-teams'], true)
+            || $type === 'workspace-teams';
+
+        $orgRoles = <<<PHP
+                    ['name' => 'owner', 'scope' => '{$scope}', 'is_system' => true],
+                    ['name' => 'admin', 'scope' => '{$scope}', 'is_system' => true],
+                    ['name' => 'member', 'scope' => '{$scope}', 'is_system' => true],
+        PHP;
+
+        $orgPermissions = <<<PHP
+                    ['name' => 'org.settings.view', 'group' => 'settings', 'scope' => '{$scope}'],
+                    ['name' => 'org.settings.update', 'group' => 'settings', 'scope' => '{$scope}'],
+                    ['name' => 'org.delete', 'group' => 'settings', 'scope' => '{$scope}'],
+                    ['name' => 'members.view', 'group' => 'members', 'scope' => '{$scope}'],
+                    ['name' => 'members.invite', 'group' => 'members', 'scope' => '{$scope}'],
+                    ['name' => 'members.remove', 'group' => 'members', 'scope' => '{$scope}'],
+                    ['name' => 'members.change-role', 'group' => 'members', 'scope' => '{$scope}'],
+        PHP;
+
+        $orgMapping = <<<'PHP'
+                    'admin' => [
+                        'org.settings.view',
+                        'members.view',
+                        'members.invite',
+                        'members.remove',
+                        'members.change-role',
+                    ],
+                    'member' => [
+                        'members.view',
+                    ],
+        PHP;
+
+        $teamRoles = '';
+        $teamPermissions = '';
+        $teamMapping = '';
+
+        if ($hasSubTeams) {
+            $orgPermissions .= <<<PHP
+
+                        ['name' => 'teams.view', 'group' => 'teams', 'scope' => '{$scope}'],
+                        ['name' => 'teams.create', 'group' => 'teams', 'scope' => '{$scope}'],
+                        ['name' => 'teams.update', 'group' => 'teams', 'scope' => '{$scope}'],
+                        ['name' => 'teams.delete', 'group' => 'teams', 'scope' => '{$scope}'],
+                        ['name' => 'teams.members.manage', 'group' => 'teams', 'scope' => '{$scope}'],
+            PHP;
+
+            $orgMapping = <<<'PHP'
+                    'admin' => [
+                        'org.settings.view',
+                        'members.view',
+                        'members.invite',
+                        'members.remove',
+                        'members.change-role',
+                        'teams.view',
+                        'teams.create',
+                        'teams.update',
+                        'teams.delete',
+                        'teams.members.manage',
+                    ],
+                    'member' => [
+                        'members.view',
+                        'teams.view',
+                    ],
+            PHP;
+
+            $teamRoles = <<<'PHP'
+
+                    ['name' => 'team:lead', 'scope' => 'team', 'is_system' => true],
+                    ['name' => 'team:member', 'scope' => 'team', 'is_system' => true],
+            PHP;
+
+            $teamPermissions = <<<'PHP'
+
+                    ['name' => 'team.settings.view', 'group' => 'team-settings', 'scope' => 'team'],
+                    ['name' => 'team.settings.update', 'group' => 'team-settings', 'scope' => 'team'],
+                    ['name' => 'team.members.view', 'group' => 'team-members', 'scope' => 'team'],
+                    ['name' => 'team.members.add', 'group' => 'team-members', 'scope' => 'team'],
+                    ['name' => 'team.members.remove', 'group' => 'team-members', 'scope' => 'team'],
+            PHP;
+
+            $teamMapping = <<<'PHP'
+
+                    'team:lead' => [
+                        'team.settings.view',
+                        'team.settings.update',
+                        'team.members.view',
+                        'team.members.add',
+                        'team.members.remove',
+                    ],
+                    'team:member' => [
+                        'team.members.view',
+                    ],
+            PHP;
+        }
+
+        return <<<PHP
+        <?php
+
+        declare(strict_types=1);
+
+        namespace Database\Seeders;
+
+        use App\Models\Permission;
+        use App\Models\Role;
+        use Illuminate\Database\Seeder;
+
+        class OrgRolesAndPermissionsSeeder extends Seeder
+        {
+            public function run(): void
+            {
+                \$this->seedRoles();
+                \$this->seedPermissions();
+                \$this->assignPermissions();
+            }
+
+            private function seedRoles(): void
+            {
+                \$roles = [
+        {$orgRoles}{$teamRoles}
+                ];
+
+                foreach (\$roles as \$role) {
+                    Role::query()->firstOrCreate(
+                        ['name' => \$role['name'], 'scope' => \$role['scope']],
+                        \$role,
+                    );
+                }
+            }
+
+            private function seedPermissions(): void
+            {
+                \$permissions = [
+        {$orgPermissions}{$teamPermissions}
+                ];
+
+                foreach (\$permissions as \$permission) {
+                    Permission::query()->firstOrCreate(
+                        ['name' => \$permission['name'], 'scope' => \$permission['scope']],
+                        [...\$permission, 'is_system' => true],
+                    );
+                }
+            }
+
+            private function assignPermissions(): void
+            {
+                \$mapping = [
+        {$orgMapping}{$teamMapping}
+                ];
+
+                foreach (\$mapping as \$roleName => \$permissionNames) {
+                    \$role = Role::query()->where('name', \$roleName)->first();
+
+                    if (\$role === null) {
+                        continue;
+                    }
+
+                    \$permissionIds = Permission::query()
+                        ->whereIn('name', \$permissionNames)
+                        ->pluck('id');
+
+                    \$role->permissions()->syncWithoutDetaching(\$permissionIds);
+                }
+            }
+        }
+
+        PHP;
     }
 
     private function generateSeederContent(string $type, ?string $subOrganization): string
@@ -603,6 +792,7 @@ final class NubosInitCommand extends Command
 
         use App\Actions\\{$modelPlural}\Add{$model}MemberAction;
         use App\Actions\\{$modelPlural}\Create{$model}Action;
+        use App\Models\Role;
         use App\Models\User;
         use Illuminate\Database\Seeder;
         use Illuminate\Support\Facades\Hash;
@@ -611,6 +801,8 @@ final class NubosInitCommand extends Command
         {
             public function run(): void
             {
+                \$this->call(OrgRolesAndPermissionsSeeder::class);
+
                 \$user = User::query()->create([
                     'name' => 'Demo User',
                     'email' => 'demo@nubos.dev',
@@ -636,6 +828,12 @@ final class NubosInitCommand extends Command
 
                 \$addMemberAction = new Add{$model}MemberAction();
                 \$addMemberAction->execute(\${$modelSnake}, \$secondUser, 'member');
+
+                \$ownerRole = Role::query()->where('name', 'owner')->where('scope', '{$modelSnake}')->firstOrFail();
+                \$memberRole = Role::query()->where('name', 'member')->where('scope', '{$modelSnake}')->firstOrFail();
+
+                \$user->assignRole(\$ownerRole, \${$modelSnake});
+                \$secondUser->assignRole(\$memberRole, \${$modelSnake});
             }
         }
 
@@ -655,6 +853,7 @@ final class NubosInitCommand extends Command
         use App\Actions\Teams\CreateTeamAction;
         use App\Actions\Workspaces\AddWorkspaceMemberAction;
         use App\Actions\Workspaces\CreateWorkspaceAction;
+        use App\Models\Role;
         use App\Models\User;
         use Illuminate\Database\Seeder;
         use Illuminate\Support\Facades\Hash;
@@ -663,6 +862,8 @@ final class NubosInitCommand extends Command
         {
             public function run(): void
             {
+                $this->call(OrgRolesAndPermissionsSeeder::class);
+
                 $user = User::query()->create([
                     'name' => 'Demo User',
                     'email' => 'demo@nubos.dev',
@@ -697,6 +898,16 @@ final class NubosInitCommand extends Command
 
                 $addTeamMemberAction = new AddTeamMemberAction();
                 $addTeamMemberAction->execute($team, $secondUser, 'member');
+
+                $ownerRole = Role::query()->where('name', 'owner')->where('scope', 'workspace')->firstOrFail();
+                $memberRole = Role::query()->where('name', 'member')->where('scope', 'workspace')->firstOrFail();
+                $teamLeadRole = Role::query()->where('name', 'team:lead')->where('scope', 'team')->firstOrFail();
+                $teamMemberRole = Role::query()->where('name', 'team:member')->where('scope', 'team')->firstOrFail();
+
+                $user->assignRole($ownerRole, $workspace);
+                $user->assignRole($teamLeadRole, $team);
+                $secondUser->assignRole($memberRole, $workspace);
+                $secondUser->assignRole($teamMemberRole, $team);
             }
         }
 
@@ -716,6 +927,7 @@ final class NubosInitCommand extends Command
 
         use App\Actions\Tenants\AddTenantMemberAction;
         use App\Actions\Tenants\CreateTenantAction;
+        use App\Models\Role;
         use App\Models\User;
         use Illuminate\Database\Seeder;
         use Illuminate\Support\Facades\Hash;
@@ -724,6 +936,8 @@ final class NubosInitCommand extends Command
         {
             public function run(): void
             {
+                \$this->call(OrgRolesAndPermissionsSeeder::class);
+
                 \$user = User::query()->create([
                     'name' => 'Demo User',
                     'email' => 'demo@nubos.dev',
@@ -750,6 +964,12 @@ final class NubosInitCommand extends Command
 
                 \$addMemberAction = app(AddTenantMemberAction::class);
                 \$addMemberAction->execute(\$acme, \$secondUser, 'member');
+
+                \$ownerRole = Role::query()->where('name', 'owner')->where('scope', 'tenant')->firstOrFail();
+                \$memberRole = Role::query()->where('name', 'member')->where('scope', 'tenant')->firstOrFail();
+
+                \$user->assignRole(\$ownerRole, \$acme);
+                \$secondUser->assignRole(\$memberRole, \$acme);
         {$subOrgCode}
             }
         }
@@ -845,6 +1065,71 @@ final class NubosInitCommand extends Command
         $this->files->put($userModelPath, $content);
 
         info("User model updated: added {$traitShortName} trait to app/Models/User.php");
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function resolveScopeResolverScopes(SubStructure $subStructure): array
+    {
+        $scopes = ["app()->bound('current_tenant') ? app('current_tenant') : null"];
+
+        if (in_array($subStructure, [SubStructure::Workspaces, SubStructure::WorkspacesAndTeams], true)) {
+            $scopes[] = "\$this->request->attributes->get('current_workspace')";
+        }
+
+        if (in_array($subStructure, [SubStructure::Teams, SubStructure::WorkspacesAndTeams], true)) {
+            $scopes[] = "\$this->request->attributes->get('current_team')";
+        }
+
+        return $scopes;
+    }
+
+    /**
+     * @param list<string> $scopes
+     */
+    private function writeScopeResolver(array $scopes): void
+    {
+        $scopeLines = array_map(
+            fn (string $scope): string => "            {$scope},",
+            $scopes,
+        );
+        $scopeCode = implode("\n", $scopeLines);
+
+        $content = <<<PHP
+        <?php
+
+        declare(strict_types=1);
+
+        namespace App\Services\Authorization;
+
+        use App\Contracts\Authorization\ScopeResolverInterface;
+        use Illuminate\Database\Eloquent\Model;
+        use Illuminate\Http\Request;
+
+        class ScopeResolver implements ScopeResolverInterface
+        {
+            public function __construct(
+                private readonly Request \$request,
+            ) {}
+
+            /**
+             * @return list<Model>
+             */
+            public function resolve(): array
+            {
+                return array_values(array_filter([
+        {$scopeCode}
+                ]));
+            }
+        }
+
+        PHP;
+
+        $targetPath = app_path('Services/Authorization/ScopeResolver.php');
+
+        $this->files->ensureDirectoryExists(dirname($targetPath));
+        $this->files->put($targetPath, $content);
     }
 
     /**

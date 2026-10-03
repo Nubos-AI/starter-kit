@@ -1,0 +1,6 @@
+{
+    "name": "nubos/consumer",
+    "require": {
+        "nubos/provider": "@dev"
+    }
+}

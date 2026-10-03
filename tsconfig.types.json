@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.tsx",
+        "resources/js/**/*.vue",
+        "vendor/nubos/*/resources/js/**/*.ts",
+        "vendor/nubos/*/resources/js/**/*.vue",
+        "vendor/nubos/*/tests/Frontend/**/*.ts"
+    ]
+}

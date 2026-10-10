@@ -1,0 +1,21 @@
+{
+    "apiVersion": 1,
+    "install": "example:install",
+    "uninstall": "example:uninstall",
+    "extensions": [
+        {
+            "id": "nubos/example.tab",
+            "point": "tabs.record-detail-tabs.triggers",
+            "component": "components/ExampleTab.vue",
+            "order": 100
+        }
+    ],
+    "options": {
+        "permissions.groups": [
+            {
+                "value": "example-templates",
+                "label": "Beispielvorlagen"
+            }
+        ]
+    }
+}

@@ -1,0 +1,90 @@
+:root {
+    --table-background: var(--ds-surface);
+    --table-foreground: var(--ds-text);
+    --table-header-background: var(--ds-surface-sunken);
+    --table-header-foreground: var(--ds-text-subtle);
+    --table-border: var(--ds-border);
+    --table-radius: var(--ds-radius-small);
+    --table-hover: var(--ds-bg-neutral-subtle-hovered);
+    --table-selected: var(--ds-bg-selected);
+    --table-accent: var(--ds-bg-selected-bold);
+    --table-cell-padding-x: 12px;
+}
+
+[data-slot='simple-table'] {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: var(--table-radius);
+    overflow: hidden;
+    background: var(--table-background);
+    color: var(--table-foreground);
+    font-size: var(--table-font-size);
+    font-variant-numeric: tabular-nums;
+}
+
+[data-slot='simple-table'] > thead {
+    background: var(--table-header-background);
+    color: var(--table-header-foreground);
+}
+
+[data-slot='simple-table'] > thead > tr > th {
+    height: var(--table-header-height);
+    font-weight: 500;
+    text-align: start;
+}
+
+[data-slot='simple-table'] > :is(thead, tbody) > tr > :is(th, td) {
+    padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+    border-bottom: 1px solid var(--table-border);
+}
+
+[data-slot='simple-table'] > tbody > tr > td {
+    height: var(--table-row-height);
+}
+
+[data-slot='simple-table'] > tbody > tr:last-child > td {
+    border-bottom: 0;
+}
+
+[data-slot='simple-table'] > tbody > tr:hover {
+    background: var(--table-hover);
+}
+
+[data-slot='simple-table'] > :is(thead, tbody) > tr > .text-center {
+    text-align: center;
+}
+
+[data-slot='data-grid'] .table-cell-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+[data-slot='data-grid'] .table-header-number .ag-header-cell-label {
+    justify-content: flex-end;
+}
+
+[data-slot='data-grid'] .table-cell-emphasis {
+    font-weight: 500;
+}
+[data-slot='data-grid'] .table-cell-danger {
+    color: var(--ds-text-danger);
+}
+[data-slot='data-grid'] .table-cell-control {
+    display: flex;
+    align-items: center;
+}
+[data-slot='data-grid'] .table-cell-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+[data-slot='data-grid'] .table-cell-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+[data-slot='data-grid'] .table-row-overdue {
+    background: var(--ds-bg-danger);
+}

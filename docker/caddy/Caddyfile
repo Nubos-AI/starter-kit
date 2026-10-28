@@ -1,0 +1,21 @@
+{
+	email {$TLS_ACME_EMAIL}
+
+	on_demand_tls {
+		ask http://laravel.test/tls/ask?token={$TENANT_TLS_ASK_TOKEN}
+	}
+}
+
+http:// {
+	redir https://{host}{uri} permanent
+}
+
+https:// {
+	tls {
+		on_demand
+	}
+
+	encode zstd gzip
+
+	reverse_proxy laravel.test:80
+}

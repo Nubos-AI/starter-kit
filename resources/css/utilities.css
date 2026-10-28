@@ -1,0 +1,2384 @@
+/* Generated from @atlaskit/tokens 16.11.2 — do not edit by hand. */
+@utility bg-accent-lime-subtlest {
+    background-color: var(--ds-bg-accent-lime-subtlest);
+}
+
+@utility bg-accent-lime-subtlest-hovered {
+    background-color: var(--ds-bg-accent-lime-subtlest-hovered);
+}
+
+@utility bg-accent-lime-subtlest-pressed {
+    background-color: var(--ds-bg-accent-lime-subtlest-pressed);
+}
+
+@utility bg-accent-lime-subtler {
+    background-color: var(--ds-bg-accent-lime-subtler);
+}
+
+@utility bg-accent-lime-subtler-hovered {
+    background-color: var(--ds-bg-accent-lime-subtler-hovered);
+}
+
+@utility bg-accent-lime-subtler-pressed {
+    background-color: var(--ds-bg-accent-lime-subtler-pressed);
+}
+
+@utility bg-accent-lime-subtle {
+    background-color: var(--ds-bg-accent-lime-subtle);
+}
+
+@utility bg-accent-lime-subtle-hovered {
+    background-color: var(--ds-bg-accent-lime-subtle-hovered);
+}
+
+@utility bg-accent-lime-subtle-pressed {
+    background-color: var(--ds-bg-accent-lime-subtle-pressed);
+}
+
+@utility bg-accent-lime-bolder {
+    background-color: var(--ds-bg-accent-lime-bolder);
+}
+
+@utility bg-accent-lime-bolder-hovered {
+    background-color: var(--ds-bg-accent-lime-bolder-hovered);
+}
+
+@utility bg-accent-lime-bolder-pressed {
+    background-color: var(--ds-bg-accent-lime-bolder-pressed);
+}
+
+@utility bg-accent-red-subtlest {
+    background-color: var(--ds-bg-accent-red-subtlest);
+}
+
+@utility bg-accent-red-subtlest-hovered {
+    background-color: var(--ds-bg-accent-red-subtlest-hovered);
+}
+
+@utility bg-accent-red-subtlest-pressed {
+    background-color: var(--ds-bg-accent-red-subtlest-pressed);
+}
+
+@utility bg-accent-red-subtler {
+    background-color: var(--ds-bg-accent-red-subtler);
+}
+
+@utility bg-accent-red-subtler-hovered {
+    background-color: var(--ds-bg-accent-red-subtler-hovered);
+}
+
+@utility bg-accent-red-subtler-pressed {
+    background-color: var(--ds-bg-accent-red-subtler-pressed);
+}
+
+@utility bg-accent-red-subtle {
+    background-color: var(--ds-bg-accent-red-subtle);
+}
+
+@utility bg-accent-red-subtle-hovered {
+    background-color: var(--ds-bg-accent-red-subtle-hovered);
+}
+
+@utility bg-accent-red-subtle-pressed {
+    background-color: var(--ds-bg-accent-red-subtle-pressed);
+}
+
+@utility bg-accent-red-bolder {
+    background-color: var(--ds-bg-accent-red-bolder);
+}
+
+@utility bg-accent-red-bolder-hovered {
+    background-color: var(--ds-bg-accent-red-bolder-hovered);
+}
+
+@utility bg-accent-red-bolder-pressed {
+    background-color: var(--ds-bg-accent-red-bolder-pressed);
+}
+
+@utility bg-accent-orange-subtlest {
+    background-color: var(--ds-bg-accent-orange-subtlest);
+}
+
+@utility bg-accent-orange-subtlest-hovered {
+    background-color: var(--ds-bg-accent-orange-subtlest-hovered);
+}
+
+@utility bg-accent-orange-subtlest-pressed {
+    background-color: var(--ds-bg-accent-orange-subtlest-pressed);
+}
+
+@utility bg-accent-orange-subtler {
+    background-color: var(--ds-bg-accent-orange-subtler);
+}
+
+@utility bg-accent-orange-subtler-hovered {
+    background-color: var(--ds-bg-accent-orange-subtler-hovered);
+}
+
+@utility bg-accent-orange-subtler-pressed {
+    background-color: var(--ds-bg-accent-orange-subtler-pressed);
+}
+
+@utility bg-accent-orange-subtle {
+    background-color: var(--ds-bg-accent-orange-subtle);
+}
+
+@utility bg-accent-orange-subtle-hovered {
+    background-color: var(--ds-bg-accent-orange-subtle-hovered);
+}
+
+@utility bg-accent-orange-subtle-pressed {
+    background-color: var(--ds-bg-accent-orange-subtle-pressed);
+}
+
+@utility bg-accent-orange-bolder {
+    background-color: var(--ds-bg-accent-orange-bolder);
+}
+
+@utility bg-accent-orange-bolder-hovered {
+    background-color: var(--ds-bg-accent-orange-bolder-hovered);
+}
+
+@utility bg-accent-orange-bolder-pressed {
+    background-color: var(--ds-bg-accent-orange-bolder-pressed);
+}
+
+@utility bg-accent-yellow-subtlest {
+    background-color: var(--ds-bg-accent-yellow-subtlest);
+}
+
+@utility bg-accent-yellow-subtlest-hovered {
+    background-color: var(--ds-bg-accent-yellow-subtlest-hovered);
+}
+
+@utility bg-accent-yellow-subtlest-pressed {
+    background-color: var(--ds-bg-accent-yellow-subtlest-pressed);
+}
+
+@utility bg-accent-yellow-subtler {
+    background-color: var(--ds-bg-accent-yellow-subtler);
+}
+
+@utility bg-accent-yellow-subtler-hovered {
+    background-color: var(--ds-bg-accent-yellow-subtler-hovered);
+}
+
+@utility bg-accent-yellow-subtler-pressed {
+    background-color: var(--ds-bg-accent-yellow-subtler-pressed);
+}
+
+@utility bg-accent-yellow-subtle {
+    background-color: var(--ds-bg-accent-yellow-subtle);
+}
+
+@utility bg-accent-yellow-subtle-hovered {
+    background-color: var(--ds-bg-accent-yellow-subtle-hovered);
+}
+
+@utility bg-accent-yellow-subtle-pressed {
+    background-color: var(--ds-bg-accent-yellow-subtle-pressed);
+}
+
+@utility bg-accent-yellow-bolder {
+    background-color: var(--ds-bg-accent-yellow-bolder);
+}
+
+@utility bg-accent-yellow-bolder-hovered {
+    background-color: var(--ds-bg-accent-yellow-bolder-hovered);
+}
+
+@utility bg-accent-yellow-bolder-pressed {
+    background-color: var(--ds-bg-accent-yellow-bolder-pressed);
+}
+
+@utility bg-accent-green-subtlest {
+    background-color: var(--ds-bg-accent-green-subtlest);
+}
+
+@utility bg-accent-green-subtlest-hovered {
+    background-color: var(--ds-bg-accent-green-subtlest-hovered);
+}
+
+@utility bg-accent-green-subtlest-pressed {
+    background-color: var(--ds-bg-accent-green-subtlest-pressed);
+}
+
+@utility bg-accent-green-subtler {
+    background-color: var(--ds-bg-accent-green-subtler);
+}
+
+@utility bg-accent-green-subtler-hovered {
+    background-color: var(--ds-bg-accent-green-subtler-hovered);
+}
+
+@utility bg-accent-green-subtler-pressed {
+    background-color: var(--ds-bg-accent-green-subtler-pressed);
+}
+
+@utility bg-accent-green-subtle {
+    background-color: var(--ds-bg-accent-green-subtle);
+}
+
+@utility bg-accent-green-subtle-hovered {
+    background-color: var(--ds-bg-accent-green-subtle-hovered);
+}
+
+@utility bg-accent-green-subtle-pressed {
+    background-color: var(--ds-bg-accent-green-subtle-pressed);
+}
+
+@utility bg-accent-green-bolder {
+    background-color: var(--ds-bg-accent-green-bolder);
+}
+
+@utility bg-accent-green-bolder-hovered {
+    background-color: var(--ds-bg-accent-green-bolder-hovered);
+}
+
+@utility bg-accent-green-bolder-pressed {
+    background-color: var(--ds-bg-accent-green-bolder-pressed);
+}
+
+@utility bg-accent-teal-subtlest {
+    background-color: var(--ds-bg-accent-teal-subtlest);
+}
+
+@utility bg-accent-teal-subtlest-hovered {
+    background-color: var(--ds-bg-accent-teal-subtlest-hovered);
+}
+
+@utility bg-accent-teal-subtlest-pressed {
+    background-color: var(--ds-bg-accent-teal-subtlest-pressed);
+}
+
+@utility bg-accent-teal-subtler {
+    background-color: var(--ds-bg-accent-teal-subtler);
+}
+
+@utility bg-accent-teal-subtler-hovered {
+    background-color: var(--ds-bg-accent-teal-subtler-hovered);
+}
+
+@utility bg-accent-teal-subtler-pressed {
+    background-color: var(--ds-bg-accent-teal-subtler-pressed);
+}
+
+@utility bg-accent-teal-subtle {
+    background-color: var(--ds-bg-accent-teal-subtle);
+}
+
+@utility bg-accent-teal-subtle-hovered {
+    background-color: var(--ds-bg-accent-teal-subtle-hovered);
+}
+
+@utility bg-accent-teal-subtle-pressed {
+    background-color: var(--ds-bg-accent-teal-subtle-pressed);
+}
+
+@utility bg-accent-teal-bolder {
+    background-color: var(--ds-bg-accent-teal-bolder);
+}
+
+@utility bg-accent-teal-bolder-hovered {
+    background-color: var(--ds-bg-accent-teal-bolder-hovered);
+}
+
+@utility bg-accent-teal-bolder-pressed {
+    background-color: var(--ds-bg-accent-teal-bolder-pressed);
+}
+
+@utility bg-accent-blue-subtlest {
+    background-color: var(--ds-bg-accent-blue-subtlest);
+}
+
+@utility bg-accent-blue-subtlest-hovered {
+    background-color: var(--ds-bg-accent-blue-subtlest-hovered);
+}
+
+@utility bg-accent-blue-subtlest-pressed {
+    background-color: var(--ds-bg-accent-blue-subtlest-pressed);
+}
+
+@utility bg-accent-blue-subtler {
+    background-color: var(--ds-bg-accent-blue-subtler);
+}
+
+@utility bg-accent-blue-subtler-hovered {
+    background-color: var(--ds-bg-accent-blue-subtler-hovered);
+}
+
+@utility bg-accent-blue-subtler-pressed {
+    background-color: var(--ds-bg-accent-blue-subtler-pressed);
+}
+
+@utility bg-accent-blue-subtle {
+    background-color: var(--ds-bg-accent-blue-subtle);
+}
+
+@utility bg-accent-blue-subtle-hovered {
+    background-color: var(--ds-bg-accent-blue-subtle-hovered);
+}
+
+@utility bg-accent-blue-subtle-pressed {
+    background-color: var(--ds-bg-accent-blue-subtle-pressed);
+}
+
+@utility bg-accent-blue-bolder {
+    background-color: var(--ds-bg-accent-blue-bolder);
+}
+
+@utility bg-accent-blue-bolder-hovered {
+    background-color: var(--ds-bg-accent-blue-bolder-hovered);
+}
+
+@utility bg-accent-blue-bolder-pressed {
+    background-color: var(--ds-bg-accent-blue-bolder-pressed);
+}
+
+@utility bg-accent-purple-subtlest {
+    background-color: var(--ds-bg-accent-purple-subtlest);
+}
+
+@utility bg-accent-purple-subtlest-hovered {
+    background-color: var(--ds-bg-accent-purple-subtlest-hovered);
+}
+
+@utility bg-accent-purple-subtlest-pressed {
+    background-color: var(--ds-bg-accent-purple-subtlest-pressed);
+}
+
+@utility bg-accent-purple-subtler {
+    background-color: var(--ds-bg-accent-purple-subtler);
+}
+
+@utility bg-accent-purple-subtler-hovered {
+    background-color: var(--ds-bg-accent-purple-subtler-hovered);
+}
+
+@utility bg-accent-purple-subtler-pressed {
+    background-color: var(--ds-bg-accent-purple-subtler-pressed);
+}
+
+@utility bg-accent-purple-subtle {
+    background-color: var(--ds-bg-accent-purple-subtle);
+}
+
+@utility bg-accent-purple-subtle-hovered {
+    background-color: var(--ds-bg-accent-purple-subtle-hovered);
+}
+
+@utility bg-accent-purple-subtle-pressed {
+    background-color: var(--ds-bg-accent-purple-subtle-pressed);
+}
+
+@utility bg-accent-purple-bolder {
+    background-color: var(--ds-bg-accent-purple-bolder);
+}
+
+@utility bg-accent-purple-bolder-hovered {
+    background-color: var(--ds-bg-accent-purple-bolder-hovered);
+}
+
+@utility bg-accent-purple-bolder-pressed {
+    background-color: var(--ds-bg-accent-purple-bolder-pressed);
+}
+
+@utility bg-accent-magenta-subtlest {
+    background-color: var(--ds-bg-accent-magenta-subtlest);
+}
+
+@utility bg-accent-magenta-subtlest-hovered {
+    background-color: var(--ds-bg-accent-magenta-subtlest-hovered);
+}
+
+@utility bg-accent-magenta-subtlest-pressed {
+    background-color: var(--ds-bg-accent-magenta-subtlest-pressed);
+}
+
+@utility bg-accent-magenta-subtler {
+    background-color: var(--ds-bg-accent-magenta-subtler);
+}
+
+@utility bg-accent-magenta-subtler-hovered {
+    background-color: var(--ds-bg-accent-magenta-subtler-hovered);
+}
+
+@utility bg-accent-magenta-subtler-pressed {
+    background-color: var(--ds-bg-accent-magenta-subtler-pressed);
+}
+
+@utility bg-accent-magenta-subtle {
+    background-color: var(--ds-bg-accent-magenta-subtle);
+}
+
+@utility bg-accent-magenta-subtle-hovered {
+    background-color: var(--ds-bg-accent-magenta-subtle-hovered);
+}
+
+@utility bg-accent-magenta-subtle-pressed {
+    background-color: var(--ds-bg-accent-magenta-subtle-pressed);
+}
+
+@utility bg-accent-magenta-bolder {
+    background-color: var(--ds-bg-accent-magenta-bolder);
+}
+
+@utility bg-accent-magenta-bolder-hovered {
+    background-color: var(--ds-bg-accent-magenta-bolder-hovered);
+}
+
+@utility bg-accent-magenta-bolder-pressed {
+    background-color: var(--ds-bg-accent-magenta-bolder-pressed);
+}
+
+@utility bg-accent-gray-subtlest {
+    background-color: var(--ds-bg-accent-gray-subtlest);
+}
+
+@utility bg-accent-gray-subtlest-hovered {
+    background-color: var(--ds-bg-accent-gray-subtlest-hovered);
+}
+
+@utility bg-accent-gray-subtlest-pressed {
+    background-color: var(--ds-bg-accent-gray-subtlest-pressed);
+}
+
+@utility bg-accent-gray-subtler {
+    background-color: var(--ds-bg-accent-gray-subtler);
+}
+
+@utility bg-accent-gray-subtler-hovered {
+    background-color: var(--ds-bg-accent-gray-subtler-hovered);
+}
+
+@utility bg-accent-gray-subtler-pressed {
+    background-color: var(--ds-bg-accent-gray-subtler-pressed);
+}
+
+@utility bg-accent-gray-subtle {
+    background-color: var(--ds-bg-accent-gray-subtle);
+}
+
+@utility bg-accent-gray-subtle-hovered {
+    background-color: var(--ds-bg-accent-gray-subtle-hovered);
+}
+
+@utility bg-accent-gray-subtle-pressed {
+    background-color: var(--ds-bg-accent-gray-subtle-pressed);
+}
+
+@utility bg-accent-gray-bolder {
+    background-color: var(--ds-bg-accent-gray-bolder);
+}
+
+@utility bg-accent-gray-bolder-hovered {
+    background-color: var(--ds-bg-accent-gray-bolder-hovered);
+}
+
+@utility bg-accent-gray-bolder-pressed {
+    background-color: var(--ds-bg-accent-gray-bolder-pressed);
+}
+
+@utility bg-code-added-highlight {
+    background-color: var(--ds-bg-code-added-highlight);
+}
+
+@utility bg-code-added-line {
+    background-color: var(--ds-bg-code-added-line);
+}
+
+@utility bg-code-default {
+    background-color: var(--ds-bg-code-default);
+}
+
+@utility bg-code-gutter {
+    background-color: var(--ds-bg-code-gutter);
+}
+
+@utility bg-code-highlight {
+    background-color: var(--ds-bg-code-highlight);
+}
+
+@utility bg-code-removed-highlight {
+    background-color: var(--ds-bg-code-removed-highlight);
+}
+
+@utility bg-code-removed-line {
+    background-color: var(--ds-bg-code-removed-line);
+}
+
+@utility bg-disabled {
+    background-color: var(--ds-bg-disabled);
+}
+
+@utility bg-input-hovered {
+    background-color: var(--ds-bg-input-hovered);
+}
+
+@utility bg-input-pressed {
+    background-color: var(--ds-bg-input-pressed);
+}
+
+@utility bg-inverse-subtle {
+    background-color: var(--ds-bg-inverse-subtle);
+}
+
+@utility bg-inverse-subtle-hovered {
+    background-color: var(--ds-bg-inverse-subtle-hovered);
+}
+
+@utility bg-inverse-subtle-pressed {
+    background-color: var(--ds-bg-inverse-subtle-pressed);
+}
+
+@utility bg-neutral {
+    background-color: var(--ds-bg-neutral);
+}
+
+@utility bg-neutral-hovered {
+    background-color: var(--ds-bg-neutral-hovered);
+}
+
+@utility bg-neutral-pressed {
+    background-color: var(--ds-bg-neutral-pressed);
+}
+
+@utility bg-neutral-subtle {
+    background-color: var(--ds-bg-neutral-subtle);
+}
+
+@utility bg-neutral-subtle-hovered {
+    background-color: var(--ds-bg-neutral-subtle-hovered);
+}
+
+@utility bg-neutral-subtle-pressed {
+    background-color: var(--ds-bg-neutral-subtle-pressed);
+}
+
+@utility bg-neutral-bold {
+    background-color: var(--ds-bg-neutral-bold);
+}
+
+@utility bg-neutral-bold-hovered {
+    background-color: var(--ds-bg-neutral-bold-hovered);
+}
+
+@utility bg-neutral-bold-pressed {
+    background-color: var(--ds-bg-neutral-bold-pressed);
+}
+
+@utility bg-selected {
+    background-color: var(--ds-bg-selected);
+}
+
+@utility bg-selected-hovered {
+    background-color: var(--ds-bg-selected-hovered);
+}
+
+@utility bg-selected-pressed {
+    background-color: var(--ds-bg-selected-pressed);
+}
+
+@utility bg-selected-bold {
+    background-color: var(--ds-bg-selected-bold);
+}
+
+@utility bg-selected-bold-hovered {
+    background-color: var(--ds-bg-selected-bold-hovered);
+}
+
+@utility bg-selected-bold-pressed {
+    background-color: var(--ds-bg-selected-bold-pressed);
+}
+
+@utility bg-brand-subtlest {
+    background-color: var(--ds-bg-brand-subtlest);
+}
+
+@utility bg-brand-subtlest-hovered {
+    background-color: var(--ds-bg-brand-subtlest-hovered);
+}
+
+@utility bg-brand-subtlest-pressed {
+    background-color: var(--ds-bg-brand-subtlest-pressed);
+}
+
+@utility bg-brand-bold {
+    background-color: var(--ds-bg-brand-bold);
+}
+
+@utility bg-brand-bold-hovered {
+    background-color: var(--ds-bg-brand-bold-hovered);
+}
+
+@utility bg-brand-bold-pressed {
+    background-color: var(--ds-bg-brand-bold-pressed);
+}
+
+@utility bg-brand-boldest {
+    background-color: var(--ds-bg-brand-boldest);
+}
+
+@utility bg-brand-boldest-hovered {
+    background-color: var(--ds-bg-brand-boldest-hovered);
+}
+
+@utility bg-brand-boldest-pressed {
+    background-color: var(--ds-bg-brand-boldest-pressed);
+}
+
+@utility bg-danger {
+    background-color: var(--ds-bg-danger);
+}
+
+@utility bg-danger-hovered {
+    background-color: var(--ds-bg-danger-hovered);
+}
+
+@utility bg-danger-pressed {
+    background-color: var(--ds-bg-danger-pressed);
+}
+
+@utility bg-danger-subtler {
+    background-color: var(--ds-bg-danger-subtler);
+}
+
+@utility bg-danger-subtler-hovered {
+    background-color: var(--ds-bg-danger-subtler-hovered);
+}
+
+@utility bg-danger-subtler-pressed {
+    background-color: var(--ds-bg-danger-subtler-pressed);
+}
+
+@utility bg-danger-subtle {
+    background-color: var(--ds-bg-danger-subtle);
+}
+
+@utility bg-danger-bold {
+    background-color: var(--ds-bg-danger-bold);
+}
+
+@utility bg-danger-bold-hovered {
+    background-color: var(--ds-bg-danger-bold-hovered);
+}
+
+@utility bg-danger-bold-pressed {
+    background-color: var(--ds-bg-danger-bold-pressed);
+}
+
+@utility bg-warning {
+    background-color: var(--ds-bg-warning);
+}
+
+@utility bg-warning-hovered {
+    background-color: var(--ds-bg-warning-hovered);
+}
+
+@utility bg-warning-pressed {
+    background-color: var(--ds-bg-warning-pressed);
+}
+
+@utility bg-warning-subtler {
+    background-color: var(--ds-bg-warning-subtler);
+}
+
+@utility bg-warning-subtler-hovered {
+    background-color: var(--ds-bg-warning-subtler-hovered);
+}
+
+@utility bg-warning-subtler-pressed {
+    background-color: var(--ds-bg-warning-subtler-pressed);
+}
+
+@utility bg-warning-subtle {
+    background-color: var(--ds-bg-warning-subtle);
+}
+
+@utility bg-warning-bold {
+    background-color: var(--ds-bg-warning-bold);
+}
+
+@utility bg-warning-bold-hovered {
+    background-color: var(--ds-bg-warning-bold-hovered);
+}
+
+@utility bg-warning-bold-pressed {
+    background-color: var(--ds-bg-warning-bold-pressed);
+}
+
+@utility bg-success {
+    background-color: var(--ds-bg-success);
+}
+
+@utility bg-success-hovered {
+    background-color: var(--ds-bg-success-hovered);
+}
+
+@utility bg-success-pressed {
+    background-color: var(--ds-bg-success-pressed);
+}
+
+@utility bg-success-subtler {
+    background-color: var(--ds-bg-success-subtler);
+}
+
+@utility bg-success-subtler-hovered {
+    background-color: var(--ds-bg-success-subtler-hovered);
+}
+
+@utility bg-success-subtler-pressed {
+    background-color: var(--ds-bg-success-subtler-pressed);
+}
+
+@utility bg-success-subtle {
+    background-color: var(--ds-bg-success-subtle);
+}
+
+@utility bg-success-bold {
+    background-color: var(--ds-bg-success-bold);
+}
+
+@utility bg-success-bold-hovered {
+    background-color: var(--ds-bg-success-bold-hovered);
+}
+
+@utility bg-success-bold-pressed {
+    background-color: var(--ds-bg-success-bold-pressed);
+}
+
+@utility bg-discovery {
+    background-color: var(--ds-bg-discovery);
+}
+
+@utility bg-discovery-hovered {
+    background-color: var(--ds-bg-discovery-hovered);
+}
+
+@utility bg-discovery-pressed {
+    background-color: var(--ds-bg-discovery-pressed);
+}
+
+@utility bg-discovery-subtler {
+    background-color: var(--ds-bg-discovery-subtler);
+}
+
+@utility bg-discovery-subtler-hovered {
+    background-color: var(--ds-bg-discovery-subtler-hovered);
+}
+
+@utility bg-discovery-subtler-pressed {
+    background-color: var(--ds-bg-discovery-subtler-pressed);
+}
+
+@utility bg-discovery-subtle {
+    background-color: var(--ds-bg-discovery-subtle);
+}
+
+@utility bg-discovery-bold {
+    background-color: var(--ds-bg-discovery-bold);
+}
+
+@utility bg-discovery-bold-hovered {
+    background-color: var(--ds-bg-discovery-bold-hovered);
+}
+
+@utility bg-discovery-bold-pressed {
+    background-color: var(--ds-bg-discovery-bold-pressed);
+}
+
+@utility bg-information {
+    background-color: var(--ds-bg-information);
+}
+
+@utility bg-information-hovered {
+    background-color: var(--ds-bg-information-hovered);
+}
+
+@utility bg-information-pressed {
+    background-color: var(--ds-bg-information-pressed);
+}
+
+@utility bg-information-subtler {
+    background-color: var(--ds-bg-information-subtler);
+}
+
+@utility bg-information-subtler-hovered {
+    background-color: var(--ds-bg-information-subtler-hovered);
+}
+
+@utility bg-information-subtler-pressed {
+    background-color: var(--ds-bg-information-subtler-pressed);
+}
+
+@utility bg-information-subtle {
+    background-color: var(--ds-bg-information-subtle);
+}
+
+@utility bg-information-bold {
+    background-color: var(--ds-bg-information-bold);
+}
+
+@utility bg-information-bold-hovered {
+    background-color: var(--ds-bg-information-bold-hovered);
+}
+
+@utility bg-information-bold-pressed {
+    background-color: var(--ds-bg-information-bold-pressed);
+}
+
+@utility border-accent-lime {
+    border-color: var(--ds-border-accent-lime);
+}
+
+@utility border-accent-lime-subtle {
+    border-color: var(--ds-border-accent-lime-subtle);
+}
+
+@utility border-accent-red {
+    border-color: var(--ds-border-accent-red);
+}
+
+@utility border-accent-red-subtle {
+    border-color: var(--ds-border-accent-red-subtle);
+}
+
+@utility border-accent-orange {
+    border-color: var(--ds-border-accent-orange);
+}
+
+@utility border-accent-orange-subtle {
+    border-color: var(--ds-border-accent-orange-subtle);
+}
+
+@utility border-accent-yellow {
+    border-color: var(--ds-border-accent-yellow);
+}
+
+@utility border-accent-yellow-subtle {
+    border-color: var(--ds-border-accent-yellow-subtle);
+}
+
+@utility border-accent-green {
+    border-color: var(--ds-border-accent-green);
+}
+
+@utility border-accent-green-subtle {
+    border-color: var(--ds-border-accent-green-subtle);
+}
+
+@utility border-accent-teal {
+    border-color: var(--ds-border-accent-teal);
+}
+
+@utility border-accent-teal-subtle {
+    border-color: var(--ds-border-accent-teal-subtle);
+}
+
+@utility border-accent-blue {
+    border-color: var(--ds-border-accent-blue);
+}
+
+@utility border-accent-blue-subtle {
+    border-color: var(--ds-border-accent-blue-subtle);
+}
+
+@utility border-accent-purple {
+    border-color: var(--ds-border-accent-purple);
+}
+
+@utility border-accent-purple-subtle {
+    border-color: var(--ds-border-accent-purple-subtle);
+}
+
+@utility border-accent-magenta {
+    border-color: var(--ds-border-accent-magenta);
+}
+
+@utility border-accent-magenta-subtle {
+    border-color: var(--ds-border-accent-magenta-subtle);
+}
+
+@utility border-accent-gray {
+    border-color: var(--ds-border-accent-gray);
+}
+
+@utility border-accent-gray-subtle {
+    border-color: var(--ds-border-accent-gray-subtle);
+}
+
+@utility border-code {
+    border-color: var(--ds-border-code);
+}
+
+@utility border-disabled {
+    border-color: var(--ds-border-disabled);
+}
+
+@utility border-focused {
+    border-color: var(--ds-border-focused);
+}
+
+@utility border-inverse {
+    border-color: var(--ds-border-inverse);
+}
+
+@utility border-selected {
+    border-color: var(--ds-border-selected);
+}
+
+@utility border-brand {
+    border-color: var(--ds-border-brand);
+}
+
+@utility border-danger {
+    border-color: var(--ds-border-danger);
+}
+
+@utility border-danger-subtle {
+    border-color: var(--ds-border-danger-subtle);
+}
+
+@utility border-warning {
+    border-color: var(--ds-border-warning);
+}
+
+@utility border-warning-subtle {
+    border-color: var(--ds-border-warning-subtle);
+}
+
+@utility border-success {
+    border-color: var(--ds-border-success);
+}
+
+@utility border-success-subtle {
+    border-color: var(--ds-border-success-subtle);
+}
+
+@utility border-discovery {
+    border-color: var(--ds-border-discovery);
+}
+
+@utility border-discovery-subtle {
+    border-color: var(--ds-border-discovery-subtle);
+}
+
+@utility border-information {
+    border-color: var(--ds-border-information);
+}
+
+@utility border-information-subtle {
+    border-color: var(--ds-border-information-subtle);
+}
+
+@utility border-bold {
+    border-color: var(--ds-border-bold);
+}
+
+@utility text-accent-lime {
+    color: var(--ds-text-accent-lime);
+}
+
+@utility decoration-accent-lime {
+    text-decoration-color: var(--ds-text-accent-lime);
+}
+
+@utility text-accent-lime-bolder {
+    color: var(--ds-text-accent-lime-bolder);
+}
+
+@utility decoration-accent-lime-bolder {
+    text-decoration-color: var(--ds-text-accent-lime-bolder);
+}
+
+@utility text-accent-red {
+    color: var(--ds-text-accent-red);
+}
+
+@utility decoration-accent-red {
+    text-decoration-color: var(--ds-text-accent-red);
+}
+
+@utility text-accent-red-bolder {
+    color: var(--ds-text-accent-red-bolder);
+}
+
+@utility decoration-accent-red-bolder {
+    text-decoration-color: var(--ds-text-accent-red-bolder);
+}
+
+@utility text-accent-orange {
+    color: var(--ds-text-accent-orange);
+}
+
+@utility decoration-accent-orange {
+    text-decoration-color: var(--ds-text-accent-orange);
+}
+
+@utility text-accent-orange-bolder {
+    color: var(--ds-text-accent-orange-bolder);
+}
+
+@utility decoration-accent-orange-bolder {
+    text-decoration-color: var(--ds-text-accent-orange-bolder);
+}
+
+@utility text-accent-yellow {
+    color: var(--ds-text-accent-yellow);
+}
+
+@utility decoration-accent-yellow {
+    text-decoration-color: var(--ds-text-accent-yellow);
+}
+
+@utility text-accent-yellow-bolder {
+    color: var(--ds-text-accent-yellow-bolder);
+}
+
+@utility decoration-accent-yellow-bolder {
+    text-decoration-color: var(--ds-text-accent-yellow-bolder);
+}
+
+@utility text-accent-green {
+    color: var(--ds-text-accent-green);
+}
+
+@utility decoration-accent-green {
+    text-decoration-color: var(--ds-text-accent-green);
+}
+
+@utility text-accent-green-bolder {
+    color: var(--ds-text-accent-green-bolder);
+}
+
+@utility decoration-accent-green-bolder {
+    text-decoration-color: var(--ds-text-accent-green-bolder);
+}
+
+@utility text-accent-teal {
+    color: var(--ds-text-accent-teal);
+}
+
+@utility decoration-accent-teal {
+    text-decoration-color: var(--ds-text-accent-teal);
+}
+
+@utility text-accent-teal-bolder {
+    color: var(--ds-text-accent-teal-bolder);
+}
+
+@utility decoration-accent-teal-bolder {
+    text-decoration-color: var(--ds-text-accent-teal-bolder);
+}
+
+@utility text-accent-blue {
+    color: var(--ds-text-accent-blue);
+}
+
+@utility decoration-accent-blue {
+    text-decoration-color: var(--ds-text-accent-blue);
+}
+
+@utility text-accent-blue-bolder {
+    color: var(--ds-text-accent-blue-bolder);
+}
+
+@utility decoration-accent-blue-bolder {
+    text-decoration-color: var(--ds-text-accent-blue-bolder);
+}
+
+@utility text-accent-purple {
+    color: var(--ds-text-accent-purple);
+}
+
+@utility decoration-accent-purple {
+    text-decoration-color: var(--ds-text-accent-purple);
+}
+
+@utility text-accent-purple-bolder {
+    color: var(--ds-text-accent-purple-bolder);
+}
+
+@utility decoration-accent-purple-bolder {
+    text-decoration-color: var(--ds-text-accent-purple-bolder);
+}
+
+@utility text-accent-magenta {
+    color: var(--ds-text-accent-magenta);
+}
+
+@utility decoration-accent-magenta {
+    text-decoration-color: var(--ds-text-accent-magenta);
+}
+
+@utility text-accent-magenta-bolder {
+    color: var(--ds-text-accent-magenta-bolder);
+}
+
+@utility decoration-accent-magenta-bolder {
+    text-decoration-color: var(--ds-text-accent-magenta-bolder);
+}
+
+@utility text-accent-gray {
+    color: var(--ds-text-accent-gray);
+}
+
+@utility decoration-accent-gray {
+    text-decoration-color: var(--ds-text-accent-gray);
+}
+
+@utility text-accent-gray-bolder {
+    color: var(--ds-text-accent-gray-bolder);
+}
+
+@utility decoration-accent-gray-bolder {
+    text-decoration-color: var(--ds-text-accent-gray-bolder);
+}
+
+@utility text-code-accent-1 {
+    color: var(--ds-text-code-accent-1);
+}
+
+@utility decoration-code-accent-1 {
+    text-decoration-color: var(--ds-text-code-accent-1);
+}
+
+@utility text-code-accent-2 {
+    color: var(--ds-text-code-accent-2);
+}
+
+@utility decoration-code-accent-2 {
+    text-decoration-color: var(--ds-text-code-accent-2);
+}
+
+@utility text-code-comments {
+    color: var(--ds-text-code-comments);
+}
+
+@utility decoration-code-comments {
+    text-decoration-color: var(--ds-text-code-comments);
+}
+
+@utility text-code-default {
+    color: var(--ds-text-code-default);
+}
+
+@utility decoration-code-default {
+    text-decoration-color: var(--ds-text-code-default);
+}
+
+@utility text-code-functions {
+    color: var(--ds-text-code-functions);
+}
+
+@utility decoration-code-functions {
+    text-decoration-color: var(--ds-text-code-functions);
+}
+
+@utility text-code-gutter {
+    color: var(--ds-text-code-gutter);
+}
+
+@utility decoration-code-gutter {
+    text-decoration-color: var(--ds-text-code-gutter);
+}
+
+@utility text-code-keywords {
+    color: var(--ds-text-code-keywords);
+}
+
+@utility decoration-code-keywords {
+    text-decoration-color: var(--ds-text-code-keywords);
+}
+
+@utility text-code-numbers {
+    color: var(--ds-text-code-numbers);
+}
+
+@utility decoration-code-numbers {
+    text-decoration-color: var(--ds-text-code-numbers);
+}
+
+@utility text-code-operators {
+    color: var(--ds-text-code-operators);
+}
+
+@utility decoration-code-operators {
+    text-decoration-color: var(--ds-text-code-operators);
+}
+
+@utility text-code-strings {
+    color: var(--ds-text-code-strings);
+}
+
+@utility decoration-code-strings {
+    text-decoration-color: var(--ds-text-code-strings);
+}
+
+@utility text-code-tags {
+    color: var(--ds-text-code-tags);
+}
+
+@utility decoration-code-tags {
+    text-decoration-color: var(--ds-text-code-tags);
+}
+
+@utility text-disabled {
+    color: var(--ds-text-disabled);
+}
+
+@utility decoration-disabled {
+    text-decoration-color: var(--ds-text-disabled);
+}
+
+@utility text-inverse {
+    color: var(--ds-text-inverse);
+}
+
+@utility decoration-inverse {
+    text-decoration-color: var(--ds-text-inverse);
+}
+
+@utility text-selected {
+    color: var(--ds-text-selected);
+}
+
+@utility decoration-selected {
+    text-decoration-color: var(--ds-text-selected);
+}
+
+@utility text-brand {
+    color: var(--ds-text-brand);
+}
+
+@utility decoration-brand {
+    text-decoration-color: var(--ds-text-brand);
+}
+
+@utility text-danger {
+    color: var(--ds-text-danger);
+}
+
+@utility decoration-danger {
+    text-decoration-color: var(--ds-text-danger);
+}
+
+@utility text-danger-bolder {
+    color: var(--ds-text-danger-bolder);
+}
+
+@utility decoration-danger-bolder {
+    text-decoration-color: var(--ds-text-danger-bolder);
+}
+
+@utility text-warning {
+    color: var(--ds-text-warning);
+}
+
+@utility decoration-warning {
+    text-decoration-color: var(--ds-text-warning);
+}
+
+@utility text-warning-inverse {
+    color: var(--ds-text-warning-inverse);
+}
+
+@utility decoration-warning-inverse {
+    text-decoration-color: var(--ds-text-warning-inverse);
+}
+
+@utility text-warning-bolder {
+    color: var(--ds-text-warning-bolder);
+}
+
+@utility decoration-warning-bolder {
+    text-decoration-color: var(--ds-text-warning-bolder);
+}
+
+@utility text-success {
+    color: var(--ds-text-success);
+}
+
+@utility decoration-success {
+    text-decoration-color: var(--ds-text-success);
+}
+
+@utility text-success-bolder {
+    color: var(--ds-text-success-bolder);
+}
+
+@utility decoration-success-bolder {
+    text-decoration-color: var(--ds-text-success-bolder);
+}
+
+@utility text-discovery {
+    color: var(--ds-text-discovery);
+}
+
+@utility decoration-discovery {
+    text-decoration-color: var(--ds-text-discovery);
+}
+
+@utility text-discovery-bolder {
+    color: var(--ds-text-discovery-bolder);
+}
+
+@utility decoration-discovery-bolder {
+    text-decoration-color: var(--ds-text-discovery-bolder);
+}
+
+@utility text-information {
+    color: var(--ds-text-information);
+}
+
+@utility decoration-information {
+    text-decoration-color: var(--ds-text-information);
+}
+
+@utility text-information-bolder {
+    color: var(--ds-text-information-bolder);
+}
+
+@utility decoration-information-bolder {
+    text-decoration-color: var(--ds-text-information-bolder);
+}
+
+@utility text-subtlest {
+    color: var(--ds-text-subtlest);
+}
+
+@utility decoration-subtlest {
+    text-decoration-color: var(--ds-text-subtlest);
+}
+
+@utility text-subtle {
+    color: var(--ds-text-subtle);
+}
+
+@utility decoration-subtle {
+    text-decoration-color: var(--ds-text-subtle);
+}
+
+@utility icon-accent-lime {
+    color: var(--ds-icon-accent-lime);
+}
+
+@utility icon-accent-red {
+    color: var(--ds-icon-accent-red);
+}
+
+@utility icon-accent-orange {
+    color: var(--ds-icon-accent-orange);
+}
+
+@utility icon-accent-yellow {
+    color: var(--ds-icon-accent-yellow);
+}
+
+@utility icon-accent-green {
+    color: var(--ds-icon-accent-green);
+}
+
+@utility icon-accent-teal {
+    color: var(--ds-icon-accent-teal);
+}
+
+@utility icon-accent-blue {
+    color: var(--ds-icon-accent-blue);
+}
+
+@utility icon-accent-purple {
+    color: var(--ds-icon-accent-purple);
+}
+
+@utility icon-accent-magenta {
+    color: var(--ds-icon-accent-magenta);
+}
+
+@utility icon-accent-gray {
+    color: var(--ds-icon-accent-gray);
+}
+
+@utility icon-disabled {
+    color: var(--ds-icon-disabled);
+}
+
+@utility icon-inverse {
+    color: var(--ds-icon-inverse);
+}
+
+@utility icon-selected {
+    color: var(--ds-icon-selected);
+}
+
+@utility icon-brand {
+    color: var(--ds-icon-brand);
+}
+
+@utility icon-danger {
+    color: var(--ds-icon-danger);
+}
+
+@utility icon-danger-hovered {
+    color: var(--ds-icon-danger-hovered);
+}
+
+@utility icon-warning {
+    color: var(--ds-icon-warning);
+}
+
+@utility icon-warning-hovered {
+    color: var(--ds-icon-warning-hovered);
+}
+
+@utility icon-warning-inverse {
+    color: var(--ds-icon-warning-inverse);
+}
+
+@utility icon-success {
+    color: var(--ds-icon-success);
+}
+
+@utility icon-success-hovered {
+    color: var(--ds-icon-success-hovered);
+}
+
+@utility icon-discovery {
+    color: var(--ds-icon-discovery);
+}
+
+@utility icon-information {
+    color: var(--ds-icon-information);
+}
+
+@utility icon-information-hovered {
+    color: var(--ds-icon-information-hovered);
+}
+
+@utility icon-subtlest {
+    color: var(--ds-icon-subtlest);
+}
+
+@utility icon-subtle {
+    color: var(--ds-icon-subtle);
+}
+
+@utility text-link {
+    color: var(--ds-link);
+}
+
+@utility decoration-link {
+    text-decoration-color: var(--ds-link);
+}
+
+@utility text-link-pressed {
+    color: var(--ds-link-pressed);
+}
+
+@utility decoration-link-pressed {
+    text-decoration-color: var(--ds-link-pressed);
+}
+
+@utility text-link-visited {
+    color: var(--ds-link-visited);
+}
+
+@utility decoration-link-visited {
+    text-decoration-color: var(--ds-link-visited);
+}
+
+@utility text-link-visited-pressed {
+    color: var(--ds-link-visited-pressed);
+}
+
+@utility decoration-link-visited-pressed {
+    text-decoration-color: var(--ds-link-visited-pressed);
+}
+
+@utility bg-interaction-hovered {
+    background-color: var(--ds-interaction-hovered);
+}
+
+@utility bg-interaction-pressed {
+    background-color: var(--ds-interaction-pressed);
+}
+
+@utility bg-skeleton {
+    background-color: var(--ds-skeleton);
+}
+
+@utility bg-skeleton-subtle {
+    background-color: var(--ds-skeleton-subtle);
+}
+
+@utility bg-blanket {
+    background-color: var(--ds-blanket);
+}
+
+@utility bg-blanket-selected {
+    background-color: var(--ds-blanket-selected);
+}
+
+@utility bg-blanket-danger {
+    background-color: var(--ds-blanket-danger);
+}
+
+@utility bg-chart-categorical-1 {
+    background-color: var(--ds-chart-categorical-1);
+}
+
+@utility text-chart-categorical-1 {
+    color: var(--ds-chart-categorical-1);
+}
+
+@utility bg-chart-categorical-1-hovered {
+    background-color: var(--ds-chart-categorical-1-hovered);
+}
+
+@utility text-chart-categorical-1-hovered {
+    color: var(--ds-chart-categorical-1-hovered);
+}
+
+@utility bg-chart-categorical-2 {
+    background-color: var(--ds-chart-categorical-2);
+}
+
+@utility text-chart-categorical-2 {
+    color: var(--ds-chart-categorical-2);
+}
+
+@utility bg-chart-categorical-2-hovered {
+    background-color: var(--ds-chart-categorical-2-hovered);
+}
+
+@utility text-chart-categorical-2-hovered {
+    color: var(--ds-chart-categorical-2-hovered);
+}
+
+@utility bg-chart-categorical-3 {
+    background-color: var(--ds-chart-categorical-3);
+}
+
+@utility text-chart-categorical-3 {
+    color: var(--ds-chart-categorical-3);
+}
+
+@utility bg-chart-categorical-3-hovered {
+    background-color: var(--ds-chart-categorical-3-hovered);
+}
+
+@utility text-chart-categorical-3-hovered {
+    color: var(--ds-chart-categorical-3-hovered);
+}
+
+@utility bg-chart-categorical-4 {
+    background-color: var(--ds-chart-categorical-4);
+}
+
+@utility text-chart-categorical-4 {
+    color: var(--ds-chart-categorical-4);
+}
+
+@utility bg-chart-categorical-4-hovered {
+    background-color: var(--ds-chart-categorical-4-hovered);
+}
+
+@utility text-chart-categorical-4-hovered {
+    color: var(--ds-chart-categorical-4-hovered);
+}
+
+@utility bg-chart-categorical-5 {
+    background-color: var(--ds-chart-categorical-5);
+}
+
+@utility text-chart-categorical-5 {
+    color: var(--ds-chart-categorical-5);
+}
+
+@utility bg-chart-categorical-5-hovered {
+    background-color: var(--ds-chart-categorical-5-hovered);
+}
+
+@utility text-chart-categorical-5-hovered {
+    color: var(--ds-chart-categorical-5-hovered);
+}
+
+@utility bg-chart-categorical-6 {
+    background-color: var(--ds-chart-categorical-6);
+}
+
+@utility text-chart-categorical-6 {
+    color: var(--ds-chart-categorical-6);
+}
+
+@utility bg-chart-categorical-6-hovered {
+    background-color: var(--ds-chart-categorical-6-hovered);
+}
+
+@utility text-chart-categorical-6-hovered {
+    color: var(--ds-chart-categorical-6-hovered);
+}
+
+@utility bg-chart-categorical-7 {
+    background-color: var(--ds-chart-categorical-7);
+}
+
+@utility text-chart-categorical-7 {
+    color: var(--ds-chart-categorical-7);
+}
+
+@utility bg-chart-categorical-7-hovered {
+    background-color: var(--ds-chart-categorical-7-hovered);
+}
+
+@utility text-chart-categorical-7-hovered {
+    color: var(--ds-chart-categorical-7-hovered);
+}
+
+@utility bg-chart-categorical-8 {
+    background-color: var(--ds-chart-categorical-8);
+}
+
+@utility text-chart-categorical-8 {
+    color: var(--ds-chart-categorical-8);
+}
+
+@utility bg-chart-categorical-8-hovered {
+    background-color: var(--ds-chart-categorical-8-hovered);
+}
+
+@utility text-chart-categorical-8-hovered {
+    color: var(--ds-chart-categorical-8-hovered);
+}
+
+@utility bg-chart-lime-bold {
+    background-color: var(--ds-chart-lime-bold);
+}
+
+@utility text-chart-lime-bold {
+    color: var(--ds-chart-lime-bold);
+}
+
+@utility bg-chart-lime-bold-hovered {
+    background-color: var(--ds-chart-lime-bold-hovered);
+}
+
+@utility text-chart-lime-bold-hovered {
+    color: var(--ds-chart-lime-bold-hovered);
+}
+
+@utility bg-chart-lime-bolder {
+    background-color: var(--ds-chart-lime-bolder);
+}
+
+@utility text-chart-lime-bolder {
+    color: var(--ds-chart-lime-bolder);
+}
+
+@utility bg-chart-lime-bolder-hovered {
+    background-color: var(--ds-chart-lime-bolder-hovered);
+}
+
+@utility text-chart-lime-bolder-hovered {
+    color: var(--ds-chart-lime-bolder-hovered);
+}
+
+@utility bg-chart-lime-boldest {
+    background-color: var(--ds-chart-lime-boldest);
+}
+
+@utility text-chart-lime-boldest {
+    color: var(--ds-chart-lime-boldest);
+}
+
+@utility bg-chart-lime-boldest-hovered {
+    background-color: var(--ds-chart-lime-boldest-hovered);
+}
+
+@utility text-chart-lime-boldest-hovered {
+    color: var(--ds-chart-lime-boldest-hovered);
+}
+
+@utility bg-chart-neutral {
+    background-color: var(--ds-chart-neutral);
+}
+
+@utility text-chart-neutral {
+    color: var(--ds-chart-neutral);
+}
+
+@utility bg-chart-neutral-hovered {
+    background-color: var(--ds-chart-neutral-hovered);
+}
+
+@utility text-chart-neutral-hovered {
+    color: var(--ds-chart-neutral-hovered);
+}
+
+@utility bg-chart-red-bold {
+    background-color: var(--ds-chart-red-bold);
+}
+
+@utility text-chart-red-bold {
+    color: var(--ds-chart-red-bold);
+}
+
+@utility bg-chart-red-bold-hovered {
+    background-color: var(--ds-chart-red-bold-hovered);
+}
+
+@utility text-chart-red-bold-hovered {
+    color: var(--ds-chart-red-bold-hovered);
+}
+
+@utility bg-chart-red-bolder {
+    background-color: var(--ds-chart-red-bolder);
+}
+
+@utility text-chart-red-bolder {
+    color: var(--ds-chart-red-bolder);
+}
+
+@utility bg-chart-red-bolder-hovered {
+    background-color: var(--ds-chart-red-bolder-hovered);
+}
+
+@utility text-chart-red-bolder-hovered {
+    color: var(--ds-chart-red-bolder-hovered);
+}
+
+@utility bg-chart-red-boldest {
+    background-color: var(--ds-chart-red-boldest);
+}
+
+@utility text-chart-red-boldest {
+    color: var(--ds-chart-red-boldest);
+}
+
+@utility bg-chart-red-boldest-hovered {
+    background-color: var(--ds-chart-red-boldest-hovered);
+}
+
+@utility text-chart-red-boldest-hovered {
+    color: var(--ds-chart-red-boldest-hovered);
+}
+
+@utility bg-chart-orange-bold {
+    background-color: var(--ds-chart-orange-bold);
+}
+
+@utility text-chart-orange-bold {
+    color: var(--ds-chart-orange-bold);
+}
+
+@utility bg-chart-orange-bold-hovered {
+    background-color: var(--ds-chart-orange-bold-hovered);
+}
+
+@utility text-chart-orange-bold-hovered {
+    color: var(--ds-chart-orange-bold-hovered);
+}
+
+@utility bg-chart-orange-bolder {
+    background-color: var(--ds-chart-orange-bolder);
+}
+
+@utility text-chart-orange-bolder {
+    color: var(--ds-chart-orange-bolder);
+}
+
+@utility bg-chart-orange-bolder-hovered {
+    background-color: var(--ds-chart-orange-bolder-hovered);
+}
+
+@utility text-chart-orange-bolder-hovered {
+    color: var(--ds-chart-orange-bolder-hovered);
+}
+
+@utility bg-chart-orange-boldest {
+    background-color: var(--ds-chart-orange-boldest);
+}
+
+@utility text-chart-orange-boldest {
+    color: var(--ds-chart-orange-boldest);
+}
+
+@utility bg-chart-orange-boldest-hovered {
+    background-color: var(--ds-chart-orange-boldest-hovered);
+}
+
+@utility text-chart-orange-boldest-hovered {
+    color: var(--ds-chart-orange-boldest-hovered);
+}
+
+@utility bg-chart-yellow-bold {
+    background-color: var(--ds-chart-yellow-bold);
+}
+
+@utility text-chart-yellow-bold {
+    color: var(--ds-chart-yellow-bold);
+}
+
+@utility bg-chart-yellow-bold-hovered {
+    background-color: var(--ds-chart-yellow-bold-hovered);
+}
+
+@utility text-chart-yellow-bold-hovered {
+    color: var(--ds-chart-yellow-bold-hovered);
+}
+
+@utility bg-chart-yellow-bolder {
+    background-color: var(--ds-chart-yellow-bolder);
+}
+
+@utility text-chart-yellow-bolder {
+    color: var(--ds-chart-yellow-bolder);
+}
+
+@utility bg-chart-yellow-bolder-hovered {
+    background-color: var(--ds-chart-yellow-bolder-hovered);
+}
+
+@utility text-chart-yellow-bolder-hovered {
+    color: var(--ds-chart-yellow-bolder-hovered);
+}
+
+@utility bg-chart-yellow-boldest {
+    background-color: var(--ds-chart-yellow-boldest);
+}
+
+@utility text-chart-yellow-boldest {
+    color: var(--ds-chart-yellow-boldest);
+}
+
+@utility bg-chart-yellow-boldest-hovered {
+    background-color: var(--ds-chart-yellow-boldest-hovered);
+}
+
+@utility text-chart-yellow-boldest-hovered {
+    color: var(--ds-chart-yellow-boldest-hovered);
+}
+
+@utility bg-chart-green-bold {
+    background-color: var(--ds-chart-green-bold);
+}
+
+@utility text-chart-green-bold {
+    color: var(--ds-chart-green-bold);
+}
+
+@utility bg-chart-green-bold-hovered {
+    background-color: var(--ds-chart-green-bold-hovered);
+}
+
+@utility text-chart-green-bold-hovered {
+    color: var(--ds-chart-green-bold-hovered);
+}
+
+@utility bg-chart-green-bolder {
+    background-color: var(--ds-chart-green-bolder);
+}
+
+@utility text-chart-green-bolder {
+    color: var(--ds-chart-green-bolder);
+}
+
+@utility bg-chart-green-bolder-hovered {
+    background-color: var(--ds-chart-green-bolder-hovered);
+}
+
+@utility text-chart-green-bolder-hovered {
+    color: var(--ds-chart-green-bolder-hovered);
+}
+
+@utility bg-chart-green-boldest {
+    background-color: var(--ds-chart-green-boldest);
+}
+
+@utility text-chart-green-boldest {
+    color: var(--ds-chart-green-boldest);
+}
+
+@utility bg-chart-green-boldest-hovered {
+    background-color: var(--ds-chart-green-boldest-hovered);
+}
+
+@utility text-chart-green-boldest-hovered {
+    color: var(--ds-chart-green-boldest-hovered);
+}
+
+@utility bg-chart-teal-bold {
+    background-color: var(--ds-chart-teal-bold);
+}
+
+@utility text-chart-teal-bold {
+    color: var(--ds-chart-teal-bold);
+}
+
+@utility bg-chart-teal-bold-hovered {
+    background-color: var(--ds-chart-teal-bold-hovered);
+}
+
+@utility text-chart-teal-bold-hovered {
+    color: var(--ds-chart-teal-bold-hovered);
+}
+
+@utility bg-chart-teal-bolder {
+    background-color: var(--ds-chart-teal-bolder);
+}
+
+@utility text-chart-teal-bolder {
+    color: var(--ds-chart-teal-bolder);
+}
+
+@utility bg-chart-teal-bolder-hovered {
+    background-color: var(--ds-chart-teal-bolder-hovered);
+}
+
+@utility text-chart-teal-bolder-hovered {
+    color: var(--ds-chart-teal-bolder-hovered);
+}
+
+@utility bg-chart-teal-boldest {
+    background-color: var(--ds-chart-teal-boldest);
+}
+
+@utility text-chart-teal-boldest {
+    color: var(--ds-chart-teal-boldest);
+}
+
+@utility bg-chart-teal-boldest-hovered {
+    background-color: var(--ds-chart-teal-boldest-hovered);
+}
+
+@utility text-chart-teal-boldest-hovered {
+    color: var(--ds-chart-teal-boldest-hovered);
+}
+
+@utility bg-chart-blue-bold {
+    background-color: var(--ds-chart-blue-bold);
+}
+
+@utility text-chart-blue-bold {
+    color: var(--ds-chart-blue-bold);
+}
+
+@utility bg-chart-blue-bold-hovered {
+    background-color: var(--ds-chart-blue-bold-hovered);
+}
+
+@utility text-chart-blue-bold-hovered {
+    color: var(--ds-chart-blue-bold-hovered);
+}
+
+@utility bg-chart-blue-bolder {
+    background-color: var(--ds-chart-blue-bolder);
+}
+
+@utility text-chart-blue-bolder {
+    color: var(--ds-chart-blue-bolder);
+}
+
+@utility bg-chart-blue-bolder-hovered {
+    background-color: var(--ds-chart-blue-bolder-hovered);
+}
+
+@utility text-chart-blue-bolder-hovered {
+    color: var(--ds-chart-blue-bolder-hovered);
+}
+
+@utility bg-chart-blue-boldest {
+    background-color: var(--ds-chart-blue-boldest);
+}
+
+@utility text-chart-blue-boldest {
+    color: var(--ds-chart-blue-boldest);
+}
+
+@utility bg-chart-blue-boldest-hovered {
+    background-color: var(--ds-chart-blue-boldest-hovered);
+}
+
+@utility text-chart-blue-boldest-hovered {
+    color: var(--ds-chart-blue-boldest-hovered);
+}
+
+@utility bg-chart-purple-bold {
+    background-color: var(--ds-chart-purple-bold);
+}
+
+@utility text-chart-purple-bold {
+    color: var(--ds-chart-purple-bold);
+}
+
+@utility bg-chart-purple-bold-hovered {
+    background-color: var(--ds-chart-purple-bold-hovered);
+}
+
+@utility text-chart-purple-bold-hovered {
+    color: var(--ds-chart-purple-bold-hovered);
+}
+
+@utility bg-chart-purple-bolder {
+    background-color: var(--ds-chart-purple-bolder);
+}
+
+@utility text-chart-purple-bolder {
+    color: var(--ds-chart-purple-bolder);
+}
+
+@utility bg-chart-purple-bolder-hovered {
+    background-color: var(--ds-chart-purple-bolder-hovered);
+}
+
+@utility text-chart-purple-bolder-hovered {
+    color: var(--ds-chart-purple-bolder-hovered);
+}
+
+@utility bg-chart-purple-boldest {
+    background-color: var(--ds-chart-purple-boldest);
+}
+
+@utility text-chart-purple-boldest {
+    color: var(--ds-chart-purple-boldest);
+}
+
+@utility bg-chart-purple-boldest-hovered {
+    background-color: var(--ds-chart-purple-boldest-hovered);
+}
+
+@utility text-chart-purple-boldest-hovered {
+    color: var(--ds-chart-purple-boldest-hovered);
+}
+
+@utility bg-chart-magenta-bold {
+    background-color: var(--ds-chart-magenta-bold);
+}
+
+@utility text-chart-magenta-bold {
+    color: var(--ds-chart-magenta-bold);
+}
+
+@utility bg-chart-magenta-bold-hovered {
+    background-color: var(--ds-chart-magenta-bold-hovered);
+}
+
+@utility text-chart-magenta-bold-hovered {
+    color: var(--ds-chart-magenta-bold-hovered);
+}
+
+@utility bg-chart-magenta-bolder {
+    background-color: var(--ds-chart-magenta-bolder);
+}
+
+@utility text-chart-magenta-bolder {
+    color: var(--ds-chart-magenta-bolder);
+}
+
+@utility bg-chart-magenta-bolder-hovered {
+    background-color: var(--ds-chart-magenta-bolder-hovered);
+}
+
+@utility text-chart-magenta-bolder-hovered {
+    color: var(--ds-chart-magenta-bolder-hovered);
+}
+
+@utility bg-chart-magenta-boldest {
+    background-color: var(--ds-chart-magenta-boldest);
+}
+
+@utility text-chart-magenta-boldest {
+    color: var(--ds-chart-magenta-boldest);
+}
+
+@utility bg-chart-magenta-boldest-hovered {
+    background-color: var(--ds-chart-magenta-boldest-hovered);
+}
+
+@utility text-chart-magenta-boldest-hovered {
+    color: var(--ds-chart-magenta-boldest-hovered);
+}
+
+@utility bg-chart-gray-bold {
+    background-color: var(--ds-chart-gray-bold);
+}
+
+@utility text-chart-gray-bold {
+    color: var(--ds-chart-gray-bold);
+}
+
+@utility bg-chart-gray-bold-hovered {
+    background-color: var(--ds-chart-gray-bold-hovered);
+}
+
+@utility text-chart-gray-bold-hovered {
+    color: var(--ds-chart-gray-bold-hovered);
+}
+
+@utility bg-chart-gray-bolder {
+    background-color: var(--ds-chart-gray-bolder);
+}
+
+@utility text-chart-gray-bolder {
+    color: var(--ds-chart-gray-bolder);
+}
+
+@utility bg-chart-gray-bolder-hovered {
+    background-color: var(--ds-chart-gray-bolder-hovered);
+}
+
+@utility text-chart-gray-bolder-hovered {
+    color: var(--ds-chart-gray-bolder-hovered);
+}
+
+@utility bg-chart-gray-boldest {
+    background-color: var(--ds-chart-gray-boldest);
+}
+
+@utility text-chart-gray-boldest {
+    color: var(--ds-chart-gray-boldest);
+}
+
+@utility bg-chart-gray-boldest-hovered {
+    background-color: var(--ds-chart-gray-boldest-hovered);
+}
+
+@utility text-chart-gray-boldest-hovered {
+    color: var(--ds-chart-gray-boldest-hovered);
+}
+
+@utility bg-chart-brand {
+    background-color: var(--ds-chart-brand);
+}
+
+@utility text-chart-brand {
+    color: var(--ds-chart-brand);
+}
+
+@utility bg-chart-brand-hovered {
+    background-color: var(--ds-chart-brand-hovered);
+}
+
+@utility text-chart-brand-hovered {
+    color: var(--ds-chart-brand-hovered);
+}
+
+@utility bg-chart-danger {
+    background-color: var(--ds-chart-danger);
+}
+
+@utility text-chart-danger {
+    color: var(--ds-chart-danger);
+}
+
+@utility bg-chart-danger-hovered {
+    background-color: var(--ds-chart-danger-hovered);
+}
+
+@utility text-chart-danger-hovered {
+    color: var(--ds-chart-danger-hovered);
+}
+
+@utility bg-chart-danger-bold {
+    background-color: var(--ds-chart-danger-bold);
+}
+
+@utility text-chart-danger-bold {
+    color: var(--ds-chart-danger-bold);
+}
+
+@utility bg-chart-danger-bold-hovered {
+    background-color: var(--ds-chart-danger-bold-hovered);
+}
+
+@utility text-chart-danger-bold-hovered {
+    color: var(--ds-chart-danger-bold-hovered);
+}
+
+@utility bg-chart-warning {
+    background-color: var(--ds-chart-warning);
+}
+
+@utility text-chart-warning {
+    color: var(--ds-chart-warning);
+}
+
+@utility bg-chart-warning-hovered {
+    background-color: var(--ds-chart-warning-hovered);
+}
+
+@utility text-chart-warning-hovered {
+    color: var(--ds-chart-warning-hovered);
+}
+
+@utility bg-chart-warning-bold {
+    background-color: var(--ds-chart-warning-bold);
+}
+
+@utility text-chart-warning-bold {
+    color: var(--ds-chart-warning-bold);
+}
+
+@utility bg-chart-warning-bold-hovered {
+    background-color: var(--ds-chart-warning-bold-hovered);
+}
+
+@utility text-chart-warning-bold-hovered {
+    color: var(--ds-chart-warning-bold-hovered);
+}
+
+@utility bg-chart-success {
+    background-color: var(--ds-chart-success);
+}
+
+@utility text-chart-success {
+    color: var(--ds-chart-success);
+}
+
+@utility bg-chart-success-hovered {
+    background-color: var(--ds-chart-success-hovered);
+}
+
+@utility text-chart-success-hovered {
+    color: var(--ds-chart-success-hovered);
+}
+
+@utility bg-chart-success-bold {
+    background-color: var(--ds-chart-success-bold);
+}
+
+@utility text-chart-success-bold {
+    color: var(--ds-chart-success-bold);
+}
+
+@utility bg-chart-success-bold-hovered {
+    background-color: var(--ds-chart-success-bold-hovered);
+}
+
+@utility text-chart-success-bold-hovered {
+    color: var(--ds-chart-success-bold-hovered);
+}
+
+@utility bg-chart-discovery {
+    background-color: var(--ds-chart-discovery);
+}
+
+@utility text-chart-discovery {
+    color: var(--ds-chart-discovery);
+}
+
+@utility bg-chart-discovery-hovered {
+    background-color: var(--ds-chart-discovery-hovered);
+}
+
+@utility text-chart-discovery-hovered {
+    color: var(--ds-chart-discovery-hovered);
+}
+
+@utility bg-chart-discovery-bold {
+    background-color: var(--ds-chart-discovery-bold);
+}
+
+@utility text-chart-discovery-bold {
+    color: var(--ds-chart-discovery-bold);
+}
+
+@utility bg-chart-discovery-bold-hovered {
+    background-color: var(--ds-chart-discovery-bold-hovered);
+}
+
+@utility text-chart-discovery-bold-hovered {
+    color: var(--ds-chart-discovery-bold-hovered);
+}
+
+@utility bg-chart-information {
+    background-color: var(--ds-chart-information);
+}
+
+@utility text-chart-information {
+    color: var(--ds-chart-information);
+}
+
+@utility bg-chart-information-hovered {
+    background-color: var(--ds-chart-information-hovered);
+}
+
+@utility text-chart-information-hovered {
+    color: var(--ds-chart-information-hovered);
+}
+
+@utility bg-chart-information-bold {
+    background-color: var(--ds-chart-information-bold);
+}
+
+@utility text-chart-information-bold {
+    color: var(--ds-chart-information-bold);
+}
+
+@utility bg-chart-information-bold-hovered {
+    background-color: var(--ds-chart-information-bold-hovered);
+}
+
+@utility text-chart-information-bold-hovered {
+    color: var(--ds-chart-information-bold-hovered);
+}
+
+@utility bg-surface {
+    background-color: var(--ds-surface);
+}
+
+@utility bg-surface-hovered {
+    background-color: var(--ds-surface-hovered);
+}
+
+@utility bg-surface-pressed {
+    background-color: var(--ds-surface-pressed);
+}
+
+@utility bg-surface-container {
+    background-color: var(--ds-surface-container);
+}
+
+@utility bg-surface-container-hovered {
+    background-color: var(--ds-surface-container-hovered);
+}
+
+@utility bg-surface-container-pressed {
+    background-color: var(--ds-surface-container-pressed);
+}
+
+@utility bg-surface-overlay {
+    background-color: var(--ds-surface-overlay);
+}
+
+@utility bg-surface-overlay-hovered {
+    background-color: var(--ds-surface-overlay-hovered);
+}
+
+@utility bg-surface-overlay-pressed {
+    background-color: var(--ds-surface-overlay-pressed);
+}
+
+@utility bg-surface-raised {
+    background-color: var(--ds-surface-raised);
+}
+
+@utility bg-surface-raised-hovered {
+    background-color: var(--ds-surface-raised-hovered);
+}
+
+@utility bg-surface-raised-pressed {
+    background-color: var(--ds-surface-raised-pressed);
+}
+
+@utility bg-surface-sunken {
+    background-color: var(--ds-surface-sunken);
+}
+
+@utility opacity-disabled {
+    opacity: var(--ds-opacity-disabled);
+}
+
+@utility opacity-loading {
+    opacity: var(--ds-opacity-loading);
+}

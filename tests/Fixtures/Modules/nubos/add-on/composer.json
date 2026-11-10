@@ -1,0 +1,6 @@
+{
+    "name": "nubos/add-on",
+    "suggest": {
+        "nubos/consumer": "Adds the consumer integration."
+    }
+}

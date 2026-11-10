@@ -1,0 +1,194 @@
+<script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
+import { computed, onMounted, ref } from 'vue';
+import ListPage from '@/components/data-grid/ListPage.vue';
+import CreateButton from '@/components/engine/CreateButton.vue';
+import ReminderForm from '@/components/engine/reminders/ReminderForm.vue';
+import ReminderGrid from '@/components/engine/reminders/ReminderGrid.vue';
+import ViewStates from '@/components/engine/ViewStates.vue';
+import type { RecordViewState } from '@/components/engine/ViewStates.vue';
+import { Combobox } from '@/components/ui/combobox';
+import { Label } from '@/components/ui/label';
+import { useI18n } from '@/composables/useI18n';
+import { useReminders } from '@/composables/useReminders';
+import type { ReminderItem } from '@/composables/useReminders';
+import type { SelectOption } from '@/types/ui';
+
+const { t } = useI18n();
+
+const ALL_TYPES = '__all__';
+
+const page = usePage<{ reminderTypeOptions?: SelectOption[] }>();
+
+const { items, loading, error, loadMyOpen, complete, destroy, bulkDestroy } =
+    useReminders();
+
+const formOpen = ref<boolean>(false);
+const editing = ref<ReminderItem | null>(null);
+const typeFilter = ref<string | null>(ALL_TYPES);
+
+const typeOptions = computed<SelectOption[]>(() => [
+    {
+        value: ALL_TYPES,
+        label: t('i18n.pages.reminders.my_reminders.all_types'),
+    },
+    ...(page.props.reminderTypeOptions ?? []),
+]);
+
+const isFilteringByType = computed<boolean>(
+    () => typeFilter.value !== null && typeFilter.value !== ALL_TYPES,
+);
+
+const filteredItems = computed<ReminderItem[]>(() => {
+    if (!isFilteringByType.value) {
+        return items.value;
+    }
+
+    return items.value.filter((item) => item.type?.id === typeFilter.value);
+});
+
+const hasReminders = computed<boolean>(() => items.value.length > 0);
+
+const viewState = computed<RecordViewState>(() => {
+    if (loading.value) {
+        return 'loading';
+    }
+
+    if (error.value !== null) {
+        return 'error';
+    }
+
+    return filteredItems.value.length === 0 ? 'empty' : 'ready';
+});
+
+const emptyKind = computed<'no-records' | 'no-filter-match'>(() =>
+    isFilteringByType.value ? 'no-filter-match' : 'no-records',
+);
+
+const emptyTitle = computed<string | undefined>(() =>
+    emptyKind.value === 'no-records'
+        ? t('i18n.pages.reminders.my_reminders.no_reminders_yet')
+        : undefined,
+);
+
+const emptyDescription = computed<string | undefined>(() =>
+    emptyKind.value === 'no-records'
+        ? t(
+              'i18n.pages.reminders.my_reminders.create_your_first_reminder_to_get_started',
+          )
+        : undefined,
+);
+
+function reload(): void {
+    void loadMyOpen();
+}
+
+function clearFilter(): void {
+    typeFilter.value = ALL_TYPES;
+}
+
+function openCreate(): void {
+    editing.value = null;
+    formOpen.value = true;
+}
+
+function openEdit(item: ReminderItem): void {
+    editing.value = item;
+    formOpen.value = true;
+}
+
+async function onComplete(id: string): Promise<void> {
+    const done = await complete(id);
+
+    if (done !== null) {
+        reload();
+    }
+}
+
+async function onDelete(id: string): Promise<void> {
+    const removed = await destroy(id);
+
+    if (removed) {
+        reload();
+    }
+}
+
+async function onBulkDelete(ids: string[]): Promise<void> {
+    const removed = await bulkDestroy(ids);
+
+    if (removed) {
+        reload();
+    }
+}
+
+onMounted(reload);
+</script>
+
+<template>
+    <ListPage
+        :title="t('i18n.pages.reminders.my_reminders.my_open_reminders')"
+        :description="
+            t(
+                'i18n.pages.reminders.my_reminders.all_open_reminders_assigned_to_you',
+            )
+        "
+    >
+        <template #actions>
+            <div class="flex items-center gap-2">
+                <template v-if="hasReminders">
+                    <Label for="reminder-type-filter">
+                        {{ t('i18n.pages.reminders.my_reminders.type') }}
+                    </Label>
+                    <Combobox
+                        id="reminder-type-filter"
+                        v-model="typeFilter"
+                        class="w-44"
+                        :options="typeOptions"
+                        :searchable="typeOptions.length > 8"
+                        :placeholder="
+                            t('i18n.pages.reminders.my_reminders.all_types')
+                        "
+                        data-reminder-type-filter
+                    />
+                </template>
+
+                <CreateButton
+                    :label="t('i18n.pages.reminders.my_reminders.new_reminder')"
+                    data-reminder-new
+                    @create="openCreate"
+                />
+            </div>
+        </template>
+
+        <div class="relative min-h-0 flex-1">
+            <ReminderGrid
+                v-if="viewState === 'ready'"
+                :items="filteredItems"
+                @edit="openEdit"
+                @complete="onComplete"
+                @delete="onDelete"
+                @bulk-delete="onBulkDelete"
+            />
+            <ViewStates
+                :state="viewState"
+                skeleton-variant="table"
+                :empty-kind="emptyKind"
+                :error-message="error ?? undefined"
+                :empty-title="emptyTitle"
+                :empty-description="emptyDescription"
+                :create-label="
+                    t('i18n.pages.reminders.my_reminders.create_first_reminder')
+                "
+                @retry="reload"
+                @create="openCreate"
+                @clear-filter="clearFilter"
+            />
+        </div>
+
+        <ReminderForm
+            v-model:open="formOpen"
+            :reminder="editing"
+            @saved="reload"
+        />
+    </ListPage>
+</template>

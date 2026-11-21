@@ -1,0 +1,76 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Support\Users;
+
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+
+class TenantUserOptions
+{
+    private int $limit = 50;
+
+    public function __construct(private readonly UserOptionPresenter $userOptions) {}
+
+    /**
+     * @return list<array{value: string, label: string, description: string, avatar: array{name: string}}>
+     */
+    public function forUser(User $actingUser, string $term = ''): array
+    {
+        return $this->present($this->candidates((string) $actingUser->tenant_id, $term));
+    }
+
+    /**
+     * @return list<array{value: string, label: string, description: string, avatar: array{name: string}}>
+     */
+    public function allForUser(User $actingUser): array
+    {
+        $tenantId = $actingUser->tenant_id;
+
+        if ($tenantId === null) {
+            return [];
+        }
+
+        return $this->present($this->candidates($tenantId, isLimited: false));
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function candidates(string $tenantId, string $term = '', bool $isLimited = true): Collection
+    {
+        $pattern = '%'.addcslashes($term, '%_\\').'%';
+
+        return $this->members($tenantId)
+            ->where('is_service', false)
+            ->when($term !== '', fn (Builder $query): Builder => $query->where(
+                fn (Builder $match): Builder => $match
+                    ->where('first_name', 'ILIKE', $pattern)
+                    ->orWhere('last_name', 'ILIKE', $pattern)
+                    ->orWhere('email', 'ILIKE', $pattern),
+            ))
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->when($isLimited, fn (Builder $query): Builder => $query->limit($this->limit))
+            ->get();
+    }
+
+    /**
+     * @param  Collection<int, User>  $users
+     * @return list<array{value: string, label: string, description: string, avatar: array{name: string}}>
+     */
+    public function present(Collection $users): array
+    {
+        return $this->userOptions->presentMany($users);
+    }
+
+    /**
+     * @return Builder<User>
+     */
+    protected function members(string $tenantId): Builder
+    {
+        return User::query()->where('tenant_id', $tenantId);
+    }
+}

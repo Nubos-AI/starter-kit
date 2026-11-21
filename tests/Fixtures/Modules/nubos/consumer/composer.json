@@ -1,0 +1,7 @@
+{
+    "name": "nubos/consumer",
+    "version": "1.0.0",
+    "require": {
+        "nubos/provider": "@dev"
+    }
+}

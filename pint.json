@@ -1,0 +1,16 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "declare_strict_types": true,
+        "not_operator_with_successor_space": false,
+        "ordered_traits": false,
+        "class_attributes_separation": {
+            "elements": {
+                "const": "one",
+                "case": "one",
+                "method": "one",
+                "property": "one"
+            }
+        }
+    }
+}

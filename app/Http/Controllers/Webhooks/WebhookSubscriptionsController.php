@@ -1,0 +1,332 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Webhooks;
+
+use App\Actions\Webhooks\BulkDeleteWebhookSubscriptionsAction;
+use App\Actions\Webhooks\CreateWebhookSubscriptionAction;
+use App\Actions\Webhooks\DeleteWebhookSubscriptionAction;
+use App\Actions\Webhooks\RotateWebhookSecretAction;
+use App\Actions\Webhooks\UpdateWebhookSubscriptionAction;
+use App\Contracts\Temporal\ProcessStarterInterface;
+use App\Contracts\Webhooks\WebhookChallengeWorkflowInterface;
+use App\DTOs\Temporal\ProcessStartData;
+use App\Enums\Authorization\RoleScope;
+use App\Enums\Ui\ToastType;
+use App\Enums\Webhooks\WebhookEventType;
+use App\Enums\Webhooks\WebhookSubscriptionStatus;
+use App\Http\Controllers\Abstracts\Controller;
+use App\Models\ObjectType;
+use App\Models\Role;
+use App\Models\Team;
+use App\Models\Tenant;
+use App\Models\User;
+use App\Models\WebhookSubscription;
+use App\Support\Modules\ModuleAccess;
+use App\Support\Teams\TenantTeamOptions;
+use App\Support\Temporal\ProcessId;
+use App\Support\Tenancy\TenantContext;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+
+class WebhookSubscriptionsController extends Controller
+{
+    public function __construct(
+        private readonly CreateWebhookSubscriptionAction $createSubscription,
+        private readonly UpdateWebhookSubscriptionAction $updateSubscription,
+        private readonly RotateWebhookSecretAction $rotateSecret,
+        private readonly DeleteWebhookSubscriptionAction $deleteSubscription,
+        private readonly BulkDeleteWebhookSubscriptionsAction $bulkDeleteSubscriptions,
+        private readonly ProcessStarterInterface $processes,
+        private readonly TenantTeamOptions $teamOptions,
+        private readonly ?ModuleAccess $access = null,
+    ) {}
+
+    public function index(Request $request): InertiaResponse
+    {
+        $tenant = $this->authorizedTenant($request);
+
+        return Inertia::render('webhooks/Index', [
+            'subscriptions' => $this->subscriptionRows($tenant),
+        ]);
+    }
+
+    public function create(Request $request): InertiaResponse
+    {
+        $this->authorizedTenant($request);
+
+        return Inertia::render('webhooks/Form', [
+            'mode' => 'create',
+            'subscription' => null,
+            'secret' => null,
+            ...$this->formOptions($this->actingUser($request)),
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $tenant = $this->authorizedTenant($request);
+
+        $result = $this->createSubscription->execute($tenant, $request->all());
+
+        $this->startChallengeWhenPending($result['subscription'], $result['status']);
+
+        return to_route('engine.webhooks.edit', ['subscription' => $result['subscription']->getKey()])
+            ->with('webhookSecret', $result['secret']);
+    }
+
+    public function edit(Request $request, string $subscription): InertiaResponse
+    {
+        $tenant = $this->authorizedTenant($request);
+
+        $model = $this->tenantSubscriptionOrFail($tenant, $subscription);
+        $secret = $request->session()->get('webhookSecret');
+
+        return Inertia::render('webhooks/Form', [
+            'mode' => 'edit',
+            'subscription' => $this->formPayload($model),
+            'secret' => is_string($secret) ? $secret : null,
+            ...$this->formOptions($this->actingUser($request)),
+        ]);
+    }
+
+    public function update(Request $request, string $subscription): RedirectResponse
+    {
+        $tenant = $this->authorizedTenant($request);
+
+        $model = $this->tenantSubscriptionOrFail($tenant, $subscription);
+
+        $status = $this->updateSubscription->execute($model, $request->all());
+
+        $this->startChallengeWhenPending($model, $status);
+
+        return to_route('engine.webhooks.edit', ['subscription' => $subscription]);
+    }
+
+    public function rotateSecret(Request $request, string $subscription): RedirectResponse
+    {
+        $tenant = $this->authorizedTenant($request);
+
+        $secret = $this->rotateSecret->execute($this->tenantSubscriptionOrFail($tenant, $subscription));
+
+        return to_route('engine.webhooks.edit', ['subscription' => $subscription])
+            ->with('webhookSecret', $secret);
+    }
+
+    public function recheck(Request $request, string $subscription): RedirectResponse
+    {
+        $tenant = $this->authorizedTenant($request);
+
+        $status = $this->processes->startWithUpdate(
+            $this->challengeProcess($this->tenantSubscriptionOrFail($tenant, $subscription)),
+            'challengeOutcome',
+            [],
+            WebhookSubscriptionStatus::class,
+        );
+
+        Inertia::flash('toast', $status === WebhookSubscriptionStatus::Active
+            ? ['type' => ToastType::Success->value, 'message' => __('i18n.backend.http.controllers.webhooks.webhook_subscriptions_controller.the_destination_url_confirmed_the_challenge')]
+            : ['type' => ToastType::Warning->value, 'message' => __('i18n.backend.http.controllers.webhooks.webhook_subscriptions_controller.the_destination_url_did_not_confirm_the_challenge')]);
+
+        return to_route('engine.webhooks.edit', ['subscription' => $subscription]);
+    }
+
+    public function destroy(Request $request, string $subscription): RedirectResponse
+    {
+        $tenant = $this->authorizedTenant($request);
+
+        $this->deleteSubscription->execute($this->tenantSubscriptionOrFail($tenant, $subscription));
+
+        return to_route('engine.webhooks.index');
+    }
+
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorizedTenant($request);
+
+        $this->bulkDeleteSubscriptions->execute($this->actingUser($request), $request->all());
+
+        return to_route('engine.webhooks.index');
+    }
+
+    private function startChallengeWhenPending(WebhookSubscription $subscription, WebhookSubscriptionStatus $status): void
+    {
+        if ($status !== WebhookSubscriptionStatus::Pending) {
+            return;
+        }
+
+        $this->processes->start($this->challengeProcess($subscription));
+    }
+
+    private function challengeProcess(WebhookSubscription $subscription): ProcessStartData
+    {
+        $tenantId = $subscription->tenant_id;
+        $subscriptionId = (string) $subscription->getKey();
+
+        return new ProcessStartData(
+            workflow: WebhookChallengeWorkflowInterface::class,
+            workflowId: ProcessId::forTenant('webhook-challenge', $tenantId, $subscriptionId, (string) Str::ulid()),
+            arguments: [$tenantId, $subscriptionId],
+        );
+    }
+
+    private function tenantSubscriptionOrFail(Tenant $tenant, string $subscription): WebhookSubscription
+    {
+        return WebhookSubscription::query()
+            ->where('tenant_id', $tenant->getKey())
+            ->findOrFail($subscription);
+    }
+
+    private function authorizedTenant(Request $request): Tenant
+    {
+        $user = $request->user();
+
+        if (!$user instanceof User || !$user->isEscalatedAuthority()) {
+            throw new AuthorizationException(__('i18n.backend.http.controllers.webhooks.webhook_subscriptions_controller.you_may_not_manage_webhook_subscriptions'));
+        }
+
+        $tenant = $user->tenant;
+
+        if (!$tenant instanceof Tenant) {
+            throw new AuthorizationException(__('i18n.backend.http.controllers.webhooks.webhook_subscriptions_controller.managing_webhook_subscriptions_requires_a_tenant_context'));
+        }
+
+        return $tenant;
+    }
+
+    /**
+     * @return array{eventTypeOptions: array<int, array{value: string, label: string}>, objectTypeOptions: array<int, array{value: string, label: string}>, roleOptions: array<int, array{value: string, label: string}>, teamOptions: array<int, array{value: string, label: string}>}
+     */
+    private function formOptions(User $actingUser): array
+    {
+        return [
+            'eventTypeOptions' => $this->eventTypeOptions(),
+            'objectTypeOptions' => $this->objectTypeOptions(),
+            'roleOptions' => $this->roleOptions(),
+            'teamOptions' => $this->teamOptions->forUser($actingUser),
+        ];
+    }
+
+    /**
+     * @return array<int, array{id: string, name: string, targetUrl: string, status: string, eventTypes: list<string>, objectType: string|null, team: string|null, consecutiveFailures: int, lastError: string|null, activatedAt: string|null, rotatedAt: string|null, createdAt: string|null}>
+     */
+    private function subscriptionRows(Tenant $tenant): array
+    {
+        return WebhookSubscription::query()
+            ->with(['objectType', 'team'])
+            ->where('tenant_id', $tenant->getKey())
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(fn (WebhookSubscription $subscription): array => [
+                'id' => (string) $subscription->getKey(),
+                'name' => $subscription->name,
+                'targetUrl' => $subscription->target_url,
+                'status' => $subscription->status->value,
+                'eventTypes' => $this->eventTypeValues($subscription),
+                'objectType' => $subscription->objectType?->label,
+                'team' => $this->teamName($subscription),
+                'consecutiveFailures' => $subscription->consecutive_failures,
+                'lastError' => $subscription->last_error,
+                'activatedAt' => $subscription->activated_at?->toIso8601String(),
+                'rotatedAt' => $subscription->rotated_at?->toIso8601String(),
+                'createdAt' => $subscription->created_at?->toIso8601String(),
+            ])
+            ->all();
+    }
+
+    /**
+     * @return array{id: string, name: string, targetUrl: string, authUsername: string|null, status: string, eventTypes: list<string>, objectTypeId: string|null, teamId: string|null, roleName: string|null, consecutiveFailures: int, lastError: string|null, activatedAt: string|null, rotatedAt: string|null}
+     */
+    private function formPayload(WebhookSubscription $subscription): array
+    {
+        return [
+            'id' => (string) $subscription->getKey(),
+            'name' => $subscription->name,
+            'targetUrl' => $subscription->target_url,
+            'authUsername' => $subscription->auth_username,
+            'status' => $subscription->status->value,
+            'eventTypes' => $this->eventTypeValues($subscription),
+            'objectTypeId' => $subscription->object_type_id,
+            'teamId' => $subscription->team_id,
+            'roleName' => $subscription->role?->name,
+            'consecutiveFailures' => $subscription->consecutive_failures,
+            'lastError' => $subscription->last_error,
+            'activatedAt' => $subscription->activated_at?->toIso8601String(),
+            'rotatedAt' => $subscription->rotated_at?->toIso8601String(),
+        ];
+    }
+
+    private function teamName(WebhookSubscription $subscription): ?string
+    {
+        if ($subscription->team_id === null) {
+            return null;
+        }
+
+        $team = $subscription->team;
+
+        return $team instanceof Team
+            ? $team->name
+            : __('i18n.backend.http.controllers.webhooks.webhook_subscriptions_controller.deleted_team');
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function eventTypeValues(WebhookSubscription $subscription): array
+    {
+        return array_values($subscription->event_types
+            ->map(fn (mixed $type): string => (string) $type)
+            ->all());
+    }
+
+    /**
+     * @return array<int, array{value: string, label: string}>
+     */
+    private function eventTypeOptions(): array
+    {
+        $events = array_values(array_filter((array) config('webhooks.events', []), 'is_string'));
+        $events = $this->access?->availableWebhookEvents($events, TenantContext::current()) ?? $events;
+
+        return array_map(fn (string $type): array => [
+            'value' => $type,
+            'label' => WebhookEventType::labelOf($type),
+        ], $events);
+    }
+
+    /**
+     * @return array<int, array{value: string, label: string}>
+     */
+    private function objectTypeOptions(): array
+    {
+        return ObjectType::query()
+            ->orderBy('name')
+            ->get()
+            ->map(fn (ObjectType $objectType): array => [
+                'value' => (string) $objectType->getKey(),
+                'label' => $objectType->label,
+            ])
+            ->all();
+    }
+
+    /**
+     * @return array<int, array{value: string, label: string}>
+     */
+    private function roleOptions(): array
+    {
+        return Role::query()
+            ->where('scope', RoleScope::Tenant)
+            ->whereNull('authority')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Role $role): array => [
+                'value' => $role->name,
+                'label' => $role->name,
+            ])
+            ->all();
+    }
+}

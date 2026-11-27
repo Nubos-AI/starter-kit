@@ -1,0 +1,320 @@
+<script setup lang="ts">
+defineOptions({ inheritAttrs: false });
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { useMediaQuery } from '@vueuse/core';
+import { computed, onMounted, ref, shallowRef, watch } from 'vue';
+import RecordsController from '@/actions/App/Http/Controllers/Engine/RecordsController';
+import ImportPageController from '@/actions/App/Http/Controllers/Import/ImportPageController';
+
+import type { GridColumn, InitialRecordGrid } from '@/domains/business-data/data';
+import { recordRouteKey } from '@/domains/business-data/data';
+import { useSegmentDeepLink } from '@/domains/business-data/data';
+import * as notificationRules from '@/routes/notification-rules';
+import { useReportDrillDown } from '@/shared/business-data/data/useReportDrillDown';
+import type { SegmentSelection } from '@/shared/business-data/data/useSegments';
+import type { RecordObjectType, RecordPayload } from '@/shared/business-data/types/records';
+import { useI18n } from '@/shared/composables/useI18n';
+import { usePermissions } from '@/shared/composables/usePermissions';
+import { useUserPreferences } from '@/shared/composables/useUserPreferences';
+import type { FieldDefinition } from '@/shared/types/fields';
+import type { ObjectTypePreferences } from '@/shared/types/preferences';
+import { emptyObjectTypePreferences } from '@/shared/types/preferences';
+import PageShell from '@/shared/ui/PageShell.vue';
+import { Button } from '@/shared/ui/primitives/button';
+import CreateButton from '@/shared/ui/RecordCreateButton.vue';
+import UiExtensionPoint from '@/shared/ui/UiExtensionPoint.vue';
+import type { RecordViewState } from '@/shared/ui/ViewStates.vue';
+import ViewStates from '@/shared/ui/ViewStates.vue';
+import SegmentBar from '../../../../../shared/segments/ui/SegmentBar.vue';
+import { useRecordListMemory } from '../../composables/useRecordListMemory';
+import { useRecordSearch } from '../../composables/useRecordSearch';
+import RecordGrid from '../../ui/RecordGrid.vue';
+import RecordMobileList from '../../ui/RecordMobileList.vue';
+import RecordSearchBar from '../../ui/RecordSearchBar.vue';
+
+const { t } = useI18n();
+
+const page = usePage();
+
+const props = withDefaults(
+  defineProps<{
+    objectType: RecordObjectType;
+    columns: GridColumn[];
+    fieldDefinitions: FieldDefinition[];
+    hasRecords: boolean;
+    preference?: ObjectTypePreferences;
+    defaultSegmentId?: string | null;
+    initialGrid?: InitialRecordGrid | null;
+  }>(),
+  {
+    preference: () => emptyObjectTypePreferences(),
+  },
+);
+
+const { canForObjectType } = usePermissions();
+const { settings } = useUserPreferences();
+
+const grid = ref<InstanceType<typeof RecordGrid> | null>(null);
+const mobileList = ref<InstanceType<typeof RecordMobileList> | null>(null);
+
+const mode = ref<string>('table');
+const isMobile = useMediaQuery('(max-width: 768px)');
+const setMode = (value: string): void => {
+  mode.value = value;
+};
+const hasAnyRecords = computed<boolean>(() => props.hasRecords);
+const listReady = ref(false);
+const initialGrid = shallowRef(props.initialGrid ?? null);
+
+const { activeSegmentId, syncFromUrl, applySegment, applyDefault, clear, restoreLastUsed } = useSegmentDeepLink(
+  props.objectType,
+  {
+    lastSegmentId: props.preference.lastSegmentId,
+    lastFilter: props.preference.lastFilter,
+    defaultSegmentId: props.defaultSegmentId ?? null,
+  },
+);
+
+const { active: drillDown, clear: clearDrillDown } = useReportDrillDown();
+
+const { draft: searchDraft, term: searchTerm, setDraft: setSearchDraft, clear: clearSearch } = useRecordSearch();
+
+const listMemory = useRecordListMemory(props.objectType.id);
+
+const onApplySegment = (selection: SegmentSelection): void => {
+  clearDrillDown();
+  applySegment(selection.segment.id);
+};
+
+const clearSegment = (): void => {
+  clearDrillDown();
+  clear();
+};
+
+const recallNarrowedList = (): void => {
+  const remembered = listMemory.recall();
+
+  if (remembered === null || drillDown.value !== null) {
+    return;
+  }
+
+  if (activeSegmentId.value === null && remembered.segmentId !== null) {
+    applySegment(remembered.segmentId);
+  }
+
+  if (searchDraft.value === '' && remembered.search !== '') {
+    setSearchDraft(remembered.search, true);
+  }
+};
+
+onMounted(async () => {
+  syncFromUrl();
+  await restoreLastUsed();
+  recallNarrowedList();
+  applyDefault();
+  listReady.value = true;
+
+  watch([activeSegmentId, searchDraft], () => {
+    listMemory.remember({
+      segmentId: activeSegmentId.value,
+      search: searchDraft.value,
+    });
+  });
+});
+
+const tableState = ref<RecordViewState>('loading');
+const mobileState = ref<RecordViewState>('loading');
+
+const openCreate = (createObjectType?: RecordObjectType): void => {
+  router.visit(
+    RecordsController.create.url({
+      objectType: (createObjectType ?? props.objectType).slug,
+    }),
+  );
+};
+
+const openRecord = (record: RecordPayload): void => {
+  router.visit(RecordsController.show.url({ record: recordRouteKey(record) }));
+};
+</script>
+
+<template>
+  <PageShell
+    :title="props.objectType.label"
+    :description="
+      t('i18n.pages.records.index.all_records_of_this_object_type', {
+        value1: props.objectType.label,
+      })
+    "
+    fill
+  >
+    <template #actions>
+      <div class="flex flex-wrap items-center gap-2">
+        <UiExtensionPoint
+          name="records.views"
+          :context="{
+            ...page.props,
+            ...$attrs,
+            ...props,
+            segmentId: activeSegmentId,
+            search: searchTerm,
+            mode,
+            listReady,
+            getSelection: () => grid?.buildSelectionPayload() ?? null,
+            setMode,
+            openRecord,
+            create: openCreate,
+          }"
+        />
+        <Button v-if="canForObjectType(props.objectType.slug, 'import')" variant="outline" as-child>
+          <Link
+            :href="
+              ImportPageController.wizard.url({
+                objectType: props.objectType.slug,
+              })
+            "
+          >
+            {{ t('i18n.pages.records.index.import') }}
+          </Link>
+        </Button>
+
+        <Button v-if="canForObjectType(props.objectType.slug, 'rules.manage')" variant="outline" as-child>
+          <Link
+            :href="
+              notificationRules.edit.url({
+                objectType: props.objectType.slug,
+              })
+            "
+          >
+            {{ t('i18n.pages.records.index.rules') }}
+          </Link>
+        </Button>
+
+        <CreateButton
+          v-if="canForObjectType(props.objectType.slug, 'create')"
+          :object-type="props.objectType"
+          @create="openCreate"
+        />
+      </div>
+    </template>
+
+    <p v-if="drillDown !== null" data-drilldown-notice class="shrink-0 text-xs text-muted-foreground">
+      {{ t('i18n.pages.records.index.this_list_shows_records_in_the_selected_group_if') }}
+    </p>
+
+    <div v-if="hasAnyRecords" class="flex shrink-0 flex-wrap items-center gap-3">
+      <RecordSearchBar
+        :model-value="searchDraft"
+        class="w-full min-w-48 flex-1 sm:w-auto"
+        @update:model-value="setSearchDraft"
+        @clear="clearSearch"
+      />
+
+      <SegmentBar
+        :object-type="props.objectType"
+        :fields="props.fieldDefinitions"
+        :active-segment-id="activeSegmentId"
+        @apply="onApplySegment"
+        @clear="clearSegment"
+      />
+    </div>
+
+    <div v-if="!isMobile && mode === 'table'" class="relative min-h-0 flex-1">
+      <Transition name="record-view">
+        <div id="record-view-panel-table" v-show="mode === 'table'" class="absolute inset-0">
+          <RecordGrid
+            v-if="hasAnyRecords"
+            :key="props.objectType.id"
+            ref="grid"
+            :object-type="props.objectType"
+            :columns="props.columns"
+            :field-definitions="props.fieldDefinitions"
+            :segment-id="activeSegmentId"
+            :search="searchTerm"
+            :drill-down="drillDown"
+            :column-state="props.preference.columnState"
+            :hierarchy-order="props.preference.hierarchyOrder"
+            :page-size="settings.pageSize"
+            :ready="listReady"
+            :initial-grid="initialGrid"
+            @initial-data-consumed="initialGrid = null"
+            @open-record="openRecord"
+            @state="tableState = $event"
+          />
+          <ViewStates
+            :state="hasAnyRecords ? tableState : 'empty'"
+            skeleton-variant="table"
+            empty-kind="no-records"
+            :can-create="canForObjectType(props.objectType.slug, 'create')"
+            @retry="grid?.refresh()"
+            @create="openCreate()"
+          />
+        </div>
+      </Transition>
+    </div>
+
+    <div v-else-if="mode === 'table'" class="relative min-h-0 flex-1">
+      <RecordMobileList
+        ref="mobileList"
+        :object-type="props.objectType"
+        :columns="props.columns"
+        :field-definitions="props.fieldDefinitions"
+        :segment-id="activeSegmentId"
+        :search="searchTerm"
+        :page-size="settings.pageSize"
+        @open-record="openRecord"
+        @state="mobileState = $event"
+      />
+      <ViewStates
+        :state="mobileState"
+        skeleton-variant="list"
+        empty-kind="no-records"
+        :can-create="canForObjectType(props.objectType.slug, 'create')"
+        @retry="mobileList?.reload()"
+        @create="openCreate()"
+      />
+    </div>
+    <div id="record-extension-view" v-show="mode !== 'table'" class="relative min-h-0 flex-1" />
+  </PageShell>
+</template>
+
+<style scoped>
+.record-view-enter-active,
+.axis-picker-enter-active {
+  transition-duration: var(--ds-motion-duration-popup-enter);
+  transition-timing-function: var(--ds-motion-ease-enter);
+}
+
+.record-view-leave-active,
+.axis-picker-leave-active {
+  transition-duration: var(--ds-motion-duration-popup-exit);
+  transition-timing-function: var(--ds-motion-ease-exit);
+}
+
+.record-view-enter-active,
+.record-view-leave-active {
+  transition-property: opacity, transform;
+}
+
+.axis-picker-enter-active,
+.axis-picker-leave-active {
+  transition-property: width, opacity, transform;
+}
+
+.record-view-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.record-view-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.axis-picker-enter-from,
+.axis-picker-leave-to {
+  width: 0;
+  opacity: 0;
+  transform: translateX(8px);
+}
+</style>
